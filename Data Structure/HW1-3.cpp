@@ -1,9 +1,8 @@
 //2021/9/19
-#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <string>
 #include <cstring>
-const int MAXSIZE = 205;
+const int MAXSIZE = 2005;
 
 using namespace std;
 struct Poker

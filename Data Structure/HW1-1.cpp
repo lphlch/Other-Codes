@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 using namespace std;
-const int MAXSIZE = 10005;
+const int MAXSIZE = 30000;
 
 /// <summary>
 /// 存储每个学生的信息
@@ -134,7 +134,7 @@ int main()
 /// <returns>插入是否成功</returns>
 bool SeqList::insert(int i, string num, string name)
 {
-	if (i < 1 || this->length < i - 1 || this->length >= 10000)
+	if (i < 1 || this->length < i - 1 || this->length >= 20000)
 	{
 		return false;
 	}
@@ -159,7 +159,7 @@ bool SeqList::insert(int i, string num, string name)
 /// <returns>删除是否成功</returns>
 bool SeqList::remove(int j)
 {
-	if (j<1 || j>this->length/* || j > 10000*/)
+	if (j<1 || j>this->length || j > 20000)
 	{
 		return false;
 	}
