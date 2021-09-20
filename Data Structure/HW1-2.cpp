@@ -2,7 +2,7 @@
 
 #include <iostream>
 using namespace std;
-const int MAXSIZE = 10005;
+const int MAXSIZE = 20005;
 int la[MAXSIZE] = { 0 };
 int main()
 {
