@@ -1,4 +1,4 @@
-module logic_gates_1(iA, iB, oAnd, oOr, oNot)
+module logic_gates_1(iA, iB, oAnd, oOr, oNot);
 input iA,iB;
 output oAnd, oOr, oNot;
 and and_inst(oAnd, iA, iB);
@@ -16,11 +16,11 @@ endmodule
 
 module logic_gates_3( iA, iB, oAnd, oOr, oNot)
 input iA, iB;
-output reg oAnd, oOr, oNot
+output reg oAnd, oOr, oNot;
 always @ (*)
 begin
-oAnd = iA & iB
-oOr= iA | iB
+oAnd = iA & iB;
+oOr= iA | iB;
 oNot = ~ iA;
 end
 endmodule
@@ -53,24 +53,24 @@ logic_gates_inst(
 .iA(iA),
 .iB(iB),
 .oAnd(oAnd),
-.oOr(oOr)
+.oOr(oOr),
 .oNot(oNot)
 );
 endmodule
 
-module three_state_gates(iA, iEna, oTri);
+module three_state_gates(iA,iEna,oTri);
 input iA;
 input iEna;
 output oTri;
-assign oTri =(iEna ==1)? iA:'bz;
+assign oTri=(iEna==1)?iA:'bz;
 endmodule
 
 timescale 1ns/1ns
-module three_state_gates_tb;
+Module three_state_gates_tb;
 reg iA;
 reg iEna;;
 wire oTriState;
-three_state_gates_uut(
+three_state_gates uut(
 .iA(iA),
 .iEna(iEna),
 .oTri(oTriState)
@@ -91,21 +91,22 @@ iEna =1;
 end
 endmodule
 
-module extend #(parameter WIDTH= 16)(
-input[ WIDTH-1: 0]a,
-input sext,		//sext高电平为符号扩展,否则0扩展
-output [31: 0]b
+module extend #(parameter WIDTH = 16)(
+input [WIDTH-1:0] a,
+input sext, //sext 有效是高电平为符号扩展，否则为 0 扩展
+output [31:0] b
 );
-assign b= sext?{{(32-WIDTH)(a[ WIDTH-1]}}, a}:{27'b0,a};
+assign b=sext? {{(32-WIDTH){a[WIDTH-1]}},a} : {{(32-
+WIDTH){1'b0}},a};
 endmodule
 
 timescale 1ns/1ns
 module extend_tb;
-reg [15:0]a,sext;
+reg [15:0] a;
 reg sext;
-wire [31:0]b;
-// Instantiate the Unit Under Test(UUT
-extend uut (.a(a), .sext(sext), .b(b));
+wire [31:0] b;
+// Instantiate the Unit Under Test (UUT)
+extend uut (.a(a),.sext(sext),.b(b));
 initial
 begin
 // Initialize Inputs

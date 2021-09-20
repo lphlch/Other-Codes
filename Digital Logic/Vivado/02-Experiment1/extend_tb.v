@@ -1,9 +1,9 @@
 timescale 1ns/1ns
 module extend_tb;
-    reg [15:0]a,sext;
-    wire [31:0]b;
-    // Instantiate the Unit Under Test(UUT
-    extend uut (.a(a), .sext(sext), .b(b));
+    reg [15:0] a;
+    reg sext;
+    wire [31:0] b;
+    extend uut (.a(a),.sext(sext),.b(b));
     initial
     begin
         a=0;
