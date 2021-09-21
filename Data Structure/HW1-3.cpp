@@ -179,7 +179,7 @@ void SeqList::print()
 {
 	if (this->length == 0)
 	{
-		cout << "NULL" << endl;
+		//cout << "NULL" << endl;
 		return;
 	}
 
