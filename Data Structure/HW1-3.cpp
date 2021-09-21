@@ -142,12 +142,16 @@ int SeqList::checkByName(string type)
 /// </summary>
 void SeqList::revert()
 {
-	for (int i = 1; i <=this-> length/2; i++)
+	for (int i = 1; i <= this->length / 2; i++)
 	{
-		swap(this->pokers[i], this->pokers[this->length - i+1]);
+		swap(this->pokers[i], this->pokers[this->length - i + 1]);
 	}
 }
 
+/// <summary>
+/// 抽取，并按顺序放入牌堆顶
+/// </summary>
+/// <param name="type">要抽取的花色</param>
 void SeqList::extract(string type)
 {
 	int numCount[14] = { 0 };
@@ -157,7 +161,7 @@ void SeqList::extract(string type)
 		if (pos != 0)
 		{
 			int num = this->pokers[pos].num;
-			numCount[num]++;	//桶排序
+			numCount[num]++;	//计数排序
 			this->remove(pos);	//移除这张牌
 		}
 		else
@@ -165,7 +169,7 @@ void SeqList::extract(string type)
 			break;
 		}
 	}
-	for (int i = 13; i >0; i--)	//先放入大的，再放入小的，这样小的在顶上
+	for (int i = 13; i > 0; i--)	//先放入大的，再放入小的，这样小的在顶上
 	{
 		while (numCount[i] != 0)
 		{
@@ -185,11 +189,9 @@ void SeqList::print()
 
 	for (int i = 1; i <= this->length; i++)
 	{
-		cout << this->pokers[i].type << ' ' << numToNumStr( this->pokers[i].num) << endl;
+		cout << this->pokers[i].type << ' ' << numToNumStr(this->pokers[i].num) << endl;
 	}
 }
-
-
 
 int main()
 {
@@ -209,7 +211,7 @@ int main()
 			cin >> numStr;
 			poker.num = numStrToNum(numStr);
 
-			heap.insert(heap.length+1, poker.type, poker.num);
+			heap.insert(heap.length + 1, poker.type, poker.num);
 		}
 
 		if (order == "Extract")
