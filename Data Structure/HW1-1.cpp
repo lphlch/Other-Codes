@@ -159,7 +159,7 @@ bool SeqList::insert(int i, string num, string name)
 /// <returns>删除是否成功</returns>
 bool SeqList::remove(int j)
 {
-	if (j<1 || j>this->length || j > 20000)
+	if (j<1 || j>this->length || j > 10000)
 	{
 		return false;
 	}
