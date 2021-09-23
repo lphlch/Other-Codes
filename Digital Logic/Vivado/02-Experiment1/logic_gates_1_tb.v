@@ -1,4 +1,4 @@
-'timescale 1ns/1ns
+`timescale 1ns/1ns
 module logic_gates_tb;
     reg iA;
     reg iB;

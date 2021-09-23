@@ -1,4 +1,4 @@
-'timescale 1ns/1ns
+`timescale 1ns/1ns
 module three_state_gates_tb;
     reg iA;
     reg iEna;;

@@ -1,4 +1,4 @@
-'timescale 1ns/1ns
+`timescale 1ns/1ns
 module extend_tb;
     reg [15:0] a;
     reg sext;
