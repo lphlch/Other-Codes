@@ -1,5 +1,5 @@
-timescale 1ns/1ns
-Module three_state_gates_tb;
+'timescale 1ns/1ns
+module three_state_gates_tb;
     reg iA;
     reg iEna;;
     wire oTriState;
