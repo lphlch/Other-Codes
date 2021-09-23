@@ -1,7 +1,7 @@
 `timescale 1ns/1ns
 module three_state_gates_tb;
     reg iA;
-    reg iEna;;
+    reg iEna;
     wire oTriState;
     three_state_gates uut(
     .iA(iA),
