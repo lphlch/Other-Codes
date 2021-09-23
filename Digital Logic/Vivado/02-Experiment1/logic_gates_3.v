@@ -1,5 +1,5 @@
-module logic_gates_3(iA, iB, oAnd, oOr, oNot)
-    input iA, iB;
+module logic_gates_3(iA, iB, oAnd, oOr, oNot);
+    input iA,iB;
     output oAnd, oOr, oNot;
     reg oAnd, oOr, oNot;
     always @ (*)
