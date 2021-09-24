@@ -48,7 +48,7 @@ void inputList(PNodeHead& pNodeHead, int length)
 }
 
 /// <summary>
-/// 打印链表，元素和地址
+/// 打印链表，debug模式下打印元素和地址
 /// </summary>
 /// <param name="pNodeHead">头结点</param>
 void printList(PNodeHead& pNodeHead)
@@ -113,41 +113,6 @@ void copyList(PNodeHead& pNodeHeadSou, PNodeHead& pNodeHeaDst)
 		nodeNew->nextNode = NULL;
 		nodeDst = nodeDst->nextNode;
 		nodeSou = nodeSou->nextNode;
-	}
-}
-
-PNode* searchNodeByExpn(PNodeHead& pNodeHead, int expn)
-{
-	PNode* nextNode = pNodeHead.firstNode;
-	if (nextNode == NULL)
-	{
-		return NULL;
-	}
-	while (nextNode != NULL)
-	{
-		if (nextNode->expn == expn)
-		{
-			return nextNode;
-		}
-		nextNode = nextNode->nextNode;
-	}
-	return NULL;
-}
-
-PNode* getLastNode(PNodeHead& pNodeHead)
-{
-	PNode* node = pNodeHead.firstNode;
-	if (node == NULL)
-	{
-		return (PNode*)&pNodeHead;
-	}
-	else
-	{
-		while (node->nextNode != NULL)
-		{
-			node = node->nextNode;
-		}
-		return node;
 	}
 }
 
@@ -250,6 +215,12 @@ void mulListSingle(int coef, int expn, PNodeHead& pNodeHead)
 	}
 }
 
+/// <summary>
+/// 多项式乘法
+/// </summary>
+/// <param name="pNodeHeadMul1">链表1</param>
+/// <param name="pNodeHeadMul2">链表2</param>
+/// <param name="pNodeHeadResult">结果链表</param>
 void mulList(PNodeHead& pNodeHeadMul1, PNodeHead& pNodeHeadMul2, PNodeHead& pNodeHeadResult)
 {
 	PNode* node = pNodeHeadMul1.firstNode;
@@ -267,6 +238,10 @@ void mulList(PNodeHead& pNodeHeadMul1, PNodeHead& pNodeHeadMul2, PNodeHead& pNod
 	}
 }
 
+/// <summary>
+/// 初始化一个新链表
+/// </summary>
+/// <param name="pList">已有的头结点</param>
 void createNewList(PNodeHead& pList)
 {
 	pList.firstNode = new(PNode);
