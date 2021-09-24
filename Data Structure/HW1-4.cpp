@@ -1,6 +1,6 @@
 //2021/9/20
 
-#define DEBUG_MODE 1
+#define DEBUG_MODE 0
 #include <iostream>
 using namespace std;
 
@@ -57,7 +57,10 @@ void printList(PNodeHead& pNodeHead)
 	int count = 1;
 	if (nextNode == NULL)
 	{
-		cout << "NULL" << endl;
+		if (DEBUG_MODE)
+		{
+			cout << "NULL" << endl;
+		}
 		return;
 	}
 	while (nextNode != NULL)
@@ -68,7 +71,10 @@ void printList(PNodeHead& pNodeHead)
 		}
 		else
 		{
-			cout << nextNode->coef << ' ' << nextNode->expn << ' ';
+			if (nextNode->coef != 0)
+			{
+				cout << nextNode->coef << ' ' << nextNode->expn << ' ';
+			}
 		}
 		nextNode = nextNode->nextNode;
 		count++;
@@ -77,6 +83,7 @@ void printList(PNodeHead& pNodeHead)
 	{
 		cout << "length: " << pNodeHead.length << endl;
 	}
+	cout << endl;
 }
 
 /// <summary>
@@ -226,16 +233,53 @@ void addList(PNodeHead& pNodeHeadAdd1, PNodeHead& pNodeHeadAdd2)
 	return;
 }
 
-void mulList(PNodeHead& pNodeHeadMul1, PNodeHead& pNodeHeadMul2)
+/// <summary>
+/// 一项乘以该链表
+/// </summary>
+/// <param name="coef">系数</param>
+/// <param name="expn">指数</param>
+/// <param name="pNodeHead">多项式链表，会改变</param>
+void mulListSingle(int coef, int expn, PNodeHead& pNodeHead)
 {
-	/* 先将1中的每个乘到2上，赋给3 */
-
-	/* 再将3的各个相加 */
+	PNode* node = pNodeHead.firstNode;
+	while (node != NULL)
+	{
+		node->coef *= coef;
+		node->expn += expn;
+		node = node->nextNode;
+	}
 }
+
+void mulList(PNodeHead& pNodeHeadMul1, PNodeHead& pNodeHeadMul2, PNodeHead& pNodeHeadResult)
+{
+	PNode* node = pNodeHeadMul1.firstNode;
+	while (node != NULL)
+	{
+		/* 先将1中的每个乘到2上，赋给tmp */
+		PNodeHead tmpList;	//存储单项式的结果
+		copyList(pNodeHeadMul2, tmpList);
+		mulListSingle(node->coef, node->expn, tmpList);
+
+		/* 再将tmp的各个相加 */
+		addList(pNodeHeadResult, tmpList);
+
+		node = node->nextNode;
+	}
+}
+
+void createNewList(PNodeHead& pList)
+{
+	pList.firstNode = new(PNode);
+	pList.length = 1;
+	pList.firstNode->coef = 0;
+	pList.firstNode->expn = 0;
+	pList.firstNode->nextNode = NULL;
+	return;
+}
+
 int main()
 {
 	PNodeHead pList1, pList2;
-	PNodeHead pList3;
 
 	int length1, length2;
 
@@ -255,8 +299,49 @@ int main()
 			printList(pList1);
 			break;
 		case 1:	//乘
+		{
+			PNodeHead pList;
+			createNewList(pList);
 
+			mulList(pList1, pList2, pList);
+			printList(pList);
 			break;
+		}
+		case 2:
+		{
+			PNodeHead pNodeHeadAdd1, pNodeHeadAdd2;	//进行加法运算
+			copyList(pList1, pNodeHeadAdd1);
+			copyList(pList2, pNodeHeadAdd2);
+
+			if (length1 == 0 && length2 == 0)
+			{
+				cout << endl;
+				break;
+			}
+			else if (length1 == 0)
+			{
+				printList(pList2);
+				break;
+			}
+			else if (length2 == 0)
+			{
+				printList(pList1);
+				break;
+			}
+
+			addList(pNodeHeadAdd1, pNodeHeadAdd2);
+			printList(pNodeHeadAdd1);
+
+			PNodeHead pNodeHeadMul1, pNodeHeadMul2, pNodeHeadMulResult;//进行乘法运算
+			createNewList(pNodeHeadMulResult);
+
+			copyList(pList1, pNodeHeadMul1);
+			copyList(pList2, pNodeHeadMul2);
+
+			mulList(pNodeHeadMul1, pNodeHeadMul2, pNodeHeadMulResult);
+			printList(pNodeHeadMulResult);
+			break;
+		}
 		default:
 			break;
 	}
