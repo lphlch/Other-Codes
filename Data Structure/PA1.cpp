@@ -19,7 +19,7 @@ struct SqList
 {
 	//data
 	ElemType* elem;     // 指向数据元素的基地址
-	int  length=0;       // 线性表的当前长度
+	int  length = 0;       // 线性表的当前长度
 	int  listsize;      //线性表的最大容量
 	//function
 	bool init(int len);
@@ -201,7 +201,7 @@ void doOrder6(SqList& table)
 void doOrder7(SqList& table)
 {
 	clear();
-	cout << "共有学生"<<table.length<<"人" << endl;
+	cout << "共有学生" << table.length << "人" << endl;
 	wait();
 }
 
@@ -231,7 +231,7 @@ void doOrder9(SqList& table)
 	for (int i = 1; i <= table.length; i++)
 	{
 		int pos = table.checkByNum(table.elem[i].no);
-		if (pos!=i)
+		if (pos != i)
 		{
 			if (!table.remove(pos))
 			{
