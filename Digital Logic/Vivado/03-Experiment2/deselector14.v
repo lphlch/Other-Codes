@@ -1,4 +1,4 @@
-module de_selector41(
+module de_selector14(
     input iC,
     input iS1,
     input iS0,

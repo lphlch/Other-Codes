@@ -1,8 +1,8 @@
 `timescale 1ns/1ns
-module de_selector41_tb;
+module de_selector14_tb;
     reg iS1,iS0,iC;
     wire oZ0,oZ1,oZ2,oZ3;
-    de_selector41 uut(iC,iS1,iS0,oZ0,oZ1,oZ2,oZ3);
+    de_selector14 uut(iC,iS1,iS0,oZ0,oZ1,oZ2,oZ3);
     initial
     begin
         iS1=0;
