@@ -15,7 +15,7 @@ typedef struct Node
 }Node, * LinkList;
 
 /// <summary>
-/// 输入多项式链表，需要从小到大有序
+/// 输入多项式链表，需要从小到大有序。时间复杂度o(n)
 /// </summary>
 /// <param name="list">头结点</param>
 /// <param name="length">长度</param>
@@ -55,7 +55,7 @@ bool inputList(LinkList list, int length)
 }
 
 /// <summary>
-/// 删除除头结点外的整个链表
+/// 删除除头结点外的整个链表.时间复杂度o(n)
 /// </summary>
 /// <param name="list">链表头结点</param>
 void clearList(LinkList list)
@@ -71,7 +71,7 @@ void clearList(LinkList list)
 }
 
 /// <summary>
-/// 打印链表，debug模式下打印元素和地址
+/// 打印链表.时间复杂度o(n)
 /// </summary>
 /// <param name="list">头结点</param>
 void printList(LinkList list)
@@ -100,7 +100,7 @@ void printList(LinkList list)
 }
 
 /// <summary>
-/// 根据值查找结点
+/// 根据值查找结点.时间复杂度o(n)
 /// </summary>
 /// <param name="list">链表头结点</param>
 /// <param name="key">元素</param>
@@ -120,7 +120,7 @@ Node* searchNode(LinkList list, ElemType key)
 }
 
 /// <summary>
-/// 插入结点，需要有序
+/// 插入结点，需要有序.时间复杂度o(n)
 /// </summary>
 /// <param name="list">原链表头结点</param>
 /// <param name="value">要插入的结点</param>
@@ -156,7 +156,7 @@ void insertNode(LinkList list, ElemType value)
 }
 
 /// <summary>
-/// 删除一个结点
+/// 删除一个结点.时间复杂度o(n)
 /// </summary>
 /// <param name="list">链表头结点</param>
 /// <param name="key">要删除的结点值</param>
@@ -179,7 +179,7 @@ bool deleteNode(LinkList list, ElemType key)
 }
 
 /// <summary>
-/// 逆置链表
+/// 逆置链表.时间复杂度o(n)
 /// </summary>
 /// <param name="list">链表头结点</param>
 void reverseList(LinkList list)
@@ -201,7 +201,7 @@ void reverseList(LinkList list)
 }
 
 /// <summary>
-/// 删除重复结点
+/// 删除重复结点.时间复杂度o(n2)
 /// </summary>
 /// <param name="list">链表头结点</param>
 void deleteRepeatNode(LinkList list)
@@ -220,7 +220,7 @@ void deleteRepeatNode(LinkList list)
 }
 
 /// <summary>
-/// 合并两个有序链表
+/// 合并两个有序链表.时间复杂度o(n2)
 /// </summary>
 /// <param name="dstList">合并目标链表</param>
 /// <param name="souList">被合并的链表</param>
@@ -260,7 +260,7 @@ void wait()
 /// </summary>
 void showMenu()
 {
-	cout << "链表" << endl;
+	cout << "单链表的基本与进阶操作" << endl;
 	cout << "-----------------------------------------" << endl;
 	cout << "1.输入链表信息" << endl;
 	cout << "2.显示链表信息" << endl;
