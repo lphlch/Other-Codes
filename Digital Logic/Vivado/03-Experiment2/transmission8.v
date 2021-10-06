@@ -3,7 +3,7 @@ module transmission8(
     input A,B,C,
     output [7:0] oData
 );
-
+    wire Y;
     assign Y=  ( (iData[0] & ~C & ~B & ~A) | 
                 (iData[1] & C & ~B & ~A) |
                 (iData[2] & ~C & B & ~A) | 
