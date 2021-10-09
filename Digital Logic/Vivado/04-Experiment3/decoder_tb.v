@@ -1,3 +1,4 @@
+`timescale 1ns/1ns
 module decoder_tb ();
     reg [2:0] iData;
     reg [1:0] iEna;
@@ -5,17 +6,17 @@ module decoder_tb ();
     decoder uut(iData,iEna,oData);
     initial
     begin
-        iEna[1]=0;        
-        iEna[0]=0;
+        iEna=2'b00;
+
         #200 
-        iEna[1]=0;        
-        iEna[0]=1;
+        iEna=2'b01;
+
         #200 
-        iEna[1]=1;        
-        iEna[0]=1;
+        iEna=2'b10;
+
         #200 
-        iEna[1]=1;        
-        iEna[0]=0;
+        iEna=2'b11;
+
     end
     initial
     begin
