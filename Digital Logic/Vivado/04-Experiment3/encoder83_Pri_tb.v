@@ -33,6 +33,6 @@ module encoder83_Pri_tb ();
     begin
         #50
         iEI=0;
-        #400 iEI=1;
+        #450 iEI=1;
     end
 endmodule
