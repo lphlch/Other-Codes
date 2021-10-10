@@ -1,7 +1,9 @@
+#define _CRT_SECURE_NO_WARNINGS
 //2021/9/18
 
 #include <iostream>
 #include <string>
+#include <cstring>
 using namespace std;
 const int MAXSIZE = 20000;
 
@@ -10,8 +12,8 @@ const int MAXSIZE = 20000;
 /// </summary>
 struct Data
 {
-	string num;
-	string name;
+	char num[8];
+	char name[14];
 };
 
 /// <summary>
@@ -23,10 +25,10 @@ struct SeqList
 	Data students[MAXSIZE];
 	int length = 0;
 	//function
-	bool insert(int i, string num, string name);
+	bool insert(int i, char* num, char* name);
 	bool remove(int j);
-	int checkByName(string name);
-	int checkByNum(string num);
+	int checkByName(char* name);
+	int checkByNum(char* num);
 }table;
 
 int main()
@@ -41,13 +43,13 @@ int main()
 
 	while (true)
 	{
-		string order;
+		char order[100] = { 0 };
 		cin >> order;
-		if (order == "insert")
+		if (!strcmp(order , "insert"))
 		{
 			int pos;
-			string num;
-			string name;
+			char num[10] = { 0 };
+			char name[10] = { 0 };
 			cin >> pos >> num >> name;
 			if (table.insert(pos, num, name))
 			{
@@ -60,7 +62,7 @@ int main()
 			continue;
 		}
 
-		if (order == "remove")
+		if (!strcmp(order, "remove"))
 		{
 			int pos;
 			cin >> pos;
@@ -75,20 +77,20 @@ int main()
 			continue;
 		}
 
-		if (order == "check")
+		if (!strcmp(order, "check"))
 		{
-			string subOrder;
-			string key;
+			char subOrder[10] = { 0 };
+			char key[20] = { 0 };
 
 			int pos = 0;
 
 			cin >> subOrder;
 			cin >> key;
-			if (subOrder == "name")
+			if (!strcmp(subOrder , "name"))
 			{
 				pos = table.checkByName(key);
 			}
-			if (subOrder == "no")
+			if (!strcmp(subOrder , "no"))
 			{
 				pos = table.checkByNum(key);
 			}
@@ -104,7 +106,7 @@ int main()
 			continue;
 		}
 
-		if (order == "print")
+		if (!strcmp(order , "print"))
 		{
 			/* for debug */
 			for (int i = 1; i <= table.length; i++)
@@ -115,7 +117,7 @@ int main()
 			continue;
 		}
 
-		if (order == "end")
+		if (!strcmp(order , "end"))
 		{
 			cout << table.length << endl;
 			break;
@@ -132,7 +134,7 @@ int main()
 /// <param name="num">学号</param>
 /// <param name="name">姓名</param>
 /// <returns>插入是否成功</returns>
-bool SeqList::insert(int i, string num, string name)
+bool SeqList::insert(int i, char* num, char* name)
 {
 	if (i < 1 || this->length < i - 1 || this->length >= 20000)
 	{
@@ -146,8 +148,8 @@ bool SeqList::insert(int i, string num, string name)
 		this->students[j] = this->students[j - 1];
 	}
 	/* 插入 */
-	this->students[i].name = name;
-	this->students[i].num = num;
+	strcpy(this->students[i].name, name);
+	strcpy(this->students[i].num,num);
 
 	return true;
 }
@@ -182,11 +184,11 @@ bool SeqList::remove(int j)
 /// </summary>
 /// <param name="name">姓名</param>
 /// <returns>该姓名的位置，未找到返回0</returns>
-int SeqList::checkByName(string name)
+int SeqList::checkByName(char* name)
 {
 	for (int i = 1; i <= this->length; i++)
 	{
-		if (this->students[i].name == name)
+		if (!strcmp(this->students[i].name , name))
 		{
 			return i;
 		}
@@ -199,11 +201,11 @@ int SeqList::checkByName(string name)
 /// </summary>
 /// <param name="num">学号</param>
 /// <returns>该学号的位置，未找到返回0</returns>
-int SeqList::checkByNum(string num)
+int SeqList::checkByNum(char* num)
 {
 	for (int i = 1; i <= this->length; i++)
 	{
-		if (this->students[i].num == num)
+		if (!strcmp(this->students[i].num , num))
 		{
 			return i;
 		}
