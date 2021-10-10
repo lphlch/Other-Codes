@@ -152,106 +152,116 @@ int main()
 	bool nextline = false;
 	Stack<bool> boolean;	//V=T,F=F
 	Stack<char> op;
-	while (cin.get(c)&&!cin.eof())
+	string s;
+	while (getline(cin, s))
 	{
-		nextline = false;
-		if (c == ' ')
+		for (int i = 0; i < s.length(); i++)
 		{
-			continue;
-		}
+			c = s[i];
+			if (c == '\n' || c == '\r')
+			{
+				break;
+			}
+			nextline = false;
+			if (c == ' ')
+			{
+				continue;
+			}
 
-		switch (c)
-		{
-			case '(':
-				op.push(c);
-				break;
-			case ')':
-				/* 依次将下方的运算求值，直到遇到（为止 */
-				while (op.top() != '(')
-				{
-					char ope = op.top();
-					op.pop();
-					if (ope == '!')
+			switch (c)
+			{
+				case '(':
+					op.push(c);
+					break;
+				case ')':
+					/* 依次将下方的运算求值，直到遇到（为止 */
+					while (op.top() != '(')
 					{
-						bool b1 = boolean.top();
-						boolean.pop();
-						boolean.push(calculate(b1, ope));
+						char ope = op.top();
+						op.pop();
+						if (ope == '!')
+						{
+							bool b1 = boolean.top();
+							boolean.pop();
+							boolean.push(calculate(b1, ope));
+						}
+						else
+						{
+							bool b1 = boolean.top();
+							boolean.pop();
+							bool b2 = boolean.top();
+							boolean.pop();
+							boolean.push(calculate(b1, b2, ope));
+						}
 					}
-					else
+					op.pop();	//弹出（
+					break;
+				case '|':
+					/* 优先级最低，直接算 */
+					while (op.size() != 0 && op.top() != '(')
 					{
-						bool b1 = boolean.top();
-						boolean.pop();
-						bool b2 = boolean.top();
-						boolean.pop();
-						boolean.push(calculate(b1, b2, ope));
+						char ope = op.top();
+						op.pop();
+						if (ope == '!')
+						{
+							bool b1 = boolean.top();
+							boolean.pop();
+							boolean.push(calculate(b1, ope));
+						}
+						else
+						{
+							bool b1 = boolean.top();
+							boolean.pop();
+							bool b2 = boolean.top();
+							boolean.pop();
+							boolean.push(calculate(b1, b2, ope));
+						}
 					}
-				}
-				op.pop();	//弹出（
-				break;
-			case '|':
-				/* 优先级最低，直接算 */
-				while (op.size() != 0 && op.top() != '(')
-				{
-					char ope = op.top();
-					op.pop();
-					if (ope == '!')
+					/* 算完后将|入栈 */
+					op.push(c);
+					break;
+				case '&':
+					/* 遇到！ & ，先算再入栈 */
+					while (op.size() != 0 && op.top() != '(' && (op.top() == '!' || op.top() == '&'))
 					{
-						bool b1 = boolean.top();
-						boolean.pop();
-						boolean.push(calculate(b1, ope));
+						char ope = op.top();
+						op.pop();
+						if (ope == '!')
+						{
+							bool b1 = boolean.top();
+							boolean.pop();
+							boolean.push(calculate(b1, ope));
+						}
+						else
+						{
+							bool b1 = boolean.top();
+							boolean.pop();
+							bool b2 = boolean.top();
+							boolean.pop();
+							boolean.push(calculate(b1, b2, ope));
+						}
 					}
-					else
-					{
-						bool b1 = boolean.top();
-						boolean.pop();
-						bool b2 = boolean.top();
-						boolean.pop();
-						boolean.push(calculate(b1, b2, ope));
-					}
-				}
-				/* 算完后将|入栈 */
-				op.push(c);
-				break;
-			case '&':
-				/* 遇到！ & ，先算再入栈 */
-				while (op.size() != 0 && op.top() != '(' && (op.top() == '!' || op.top() == '&'))
-				{
-					char ope = op.top();
-					op.pop();
-					if (ope == '!')
-					{
-						bool b1 = boolean.top();
-						boolean.pop();
-						boolean.push(calculate(b1, ope));
-					}
-					else
-					{
-						bool b1 = boolean.top();
-						boolean.pop();
-						bool b2 = boolean.top();
-						boolean.pop();
-						boolean.push(calculate(b1, b2, ope));
-					}
-				}
-				op.push(c);
-				break;
-			case '!':
-				/* 右结合，先入栈，别的遇到了再算 */
-				op.push(c);
-				break;
-			case 'V':
-				boolean.push(true);
-				break;
-			case 'F':
-				boolean.push(false);
-				break;
-			default:
-				nextline = true;
-				count++;
-				break;
+					op.push(c);
+					break;
+				case '!':
+					/* 右结合，先入栈，别的遇到了再算 */
+					op.push(c);
+					break;
+				case 'V':
+					boolean.push(true);
+					break;
+				case 'F':
+					boolean.push(false);
+					break;
+				default:
+					nextline = true;
+					count++;
+					break;
+			}
 		}
+		count++;
 		/* 计算剩余 */
-		while (op.size() != 0 && nextline)
+		while (op.size() != 0)
 		{
 			char ope = op.top();
 			op.pop();
@@ -270,7 +280,7 @@ int main()
 				boolean.push(calculate(b1, b2, ope));
 			}
 		}
-		if (nextline)
+		if (c != -1)
 		{
 			cout << "Expression " << count << ": " << (boolean.top() == false ? "F" : "V") << endl;
 			boolean.clear();
