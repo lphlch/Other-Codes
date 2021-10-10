@@ -7,44 +7,44 @@ module encoder83_Pri_tb ();
     encoder83_Pri uut(iData,iEI,oData,oEO);
     initial
     begin
-        #50
+        #25
         iData=8'b11111111;
-        #50 iData=8'b11111110;
-        #50 iData=8'b11111101;
-        #50 iData=8'b11111011;
-        #50 iData=8'b11110111;
-        #50 iData=8'b11101111;
-        #50 iData=8'b11011111;
-        #50 iData=8'b10111111;
-        #50 iData=8'b01111111;
+        #25 iData=8'b11111110;
+        #25 iData=8'b11111101;
+        #25 iData=8'b11111011;
+        #25 iData=8'b11110111;
+        #25 iData=8'b11101111;
+        #25 iData=8'b11011111;
+        #25 iData=8'b10111111;
+        #25 iData=8'b01111111;
 
-        #50 iData=8'b11111110;
-        #50 iData=8'b11111100;
-        #50 iData=8'b11111001;
-        #50 iData=8'b11110011;
-        #50 iData=8'b11100110;
-        #50 iData=8'b11010101;
-        #50 iData=8'b10101010;
-        #50 iData=8'b00001111;
-        #50 iData=8'b01010100;
+        #25 iData=8'b11111110;
+        #25 iData=8'b11111100;
+        #25 iData=8'b11111001;
+        #25 iData=8'b11110011;
+        #25 iData=8'b11100110;
+        #25 iData=8'b11010101;
+        #25 iData=8'b10101010;
+        #25 iData=8'b00001111;
+        #25 iData=8'b01010100;
 
-        #50 iData=8'b11111111;
-        #50 iData=8'b11111110;
-        #50 iData=8'b11111101;
-        #50 iData=8'b11111011;
-        #50 iData=8'b11110111;
-        #50 iData=8'b11101111;
-        #50 iData=8'b11011111;
-        #50 iData=8'b10111111;
-        #50 iData=8'b01111111;
+        #25 iData=8'b11111111;
+        #25 iData=8'b11111110;
+        #25 iData=8'b11111101;
+        #25 iData=8'b11111011;
+        #25 iData=8'b11110111;
+        #25 iData=8'b11101111;
+        #25 iData=8'b11011111;
+        #25 iData=8'b10111111;
+        #25 iData=8'b01111111;
 
 
     end
 
     initial
     begin
-        #50
+        #25
         iEI=0;
-        #900 iEI=1;
+        #450 iEI=1;
     end
 endmodule
