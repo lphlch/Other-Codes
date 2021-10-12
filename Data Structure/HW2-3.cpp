@@ -121,6 +121,12 @@ void Stack<T>::clear()
 
 #pragma endregion
 
+/// <summary>
+/// 进行一目操作符的运算
+/// </summary>
+/// <param name="b1">操作数</param>
+/// <param name="op">操作符</param>
+/// <returns></returns>
 bool calculate(bool b1, char op)
 {
 	if (op == '!')
@@ -130,6 +136,13 @@ bool calculate(bool b1, char op)
 	exit(-1);
 	return false;
 }
+/// <summary>
+/// 进行双目操作符的运算
+/// </summary>
+/// <param name="b1">操作数1</param>
+/// <param name="b2">操作数2</param>
+/// <param name="op">操作符</param>
+/// <returns></returns>
 bool calculate(bool b1, bool b2, char op)
 {
 	switch (op)
