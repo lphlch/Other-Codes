@@ -1,16 +1,24 @@
 //2021/10/12
 
 #include <iostream>
-const int SIZE = 1000;
+#include <vector>
 
+const int SIZE = 100;
+const int MAXSIZE = 100;
 using namespace std;
-#pragma region QUEUE
 
+struct cellPoint
+{
+	int x;
+	int y;
+};
+
+#pragma region QUEUE
 template <typename T>
 struct Queue
 {
 	T elems[SIZE]{};
-	int front = 0;	//front指向队列头元素
+	int head = 0;	//head指向队列头元素
 	int rear = 0;	//rear指向队列尾元素下一位
 	int count = 0;	//标记队列中元素个数，来处理循环队列中头尾相遇无法判断的问题
 
@@ -23,7 +31,7 @@ struct Queue
 };
 
 /// <summary>
-/// ⼊队列操作，不判断是否满队列
+/// 入队列操作，不判断是否满队列
 /// </summary>
 /// <typeparam name="T"></typeparam>
 /// <param name="elem">入队列元素</param>
@@ -42,8 +50,8 @@ void Queue<T>::push(T elem)
 template<typename T>
 void Queue<T>::pop()
 {
-	T elem = elems[front];
-	front = (front + 1) % SIZE;
+	T elem = elems[head];
+	head = (head + 1) % SIZE;
 	count--;
 }
 
@@ -55,7 +63,7 @@ void Queue<T>::pop()
 template<typename T>
 T Queue<T>::front()
 {
-	return elems[front];
+	return elems[head];
 }
 
 /// <summary>
@@ -94,22 +102,75 @@ bool Queue<T>::full()
 	}
 }
 
-template<typename T>
-void Queue<T>::print()
-{
-	cout << '[';
-	for (int i = front; count > 0; count--)
-	{
-		cout << elems[i] << ',';
-		i = (i + 1) % SIZE;
-	}
-	cout << ']' << endl;
-}
-
 #pragma endregion
+
+Queue<cellPoint> waitQueue;
+bool cells[MAXSIZE][MAXSIZE] = { 0 };	//0不启用
+bool isChecked[MAXSIZE][MAXSIZE] = { 0 };	//0不启用
 
 int main()
 {
+	int count = 0;
 
+	int lines, columns;	//行，列
+	cin >> lines >> columns;
+	for (int i = 1; i <= lines; i++)
+	{
+		for (int j = 1; j <= columns; j++)
+		{
+			cin >> cells[i][j];
+		}
+	}
+
+	for (int i = 1; i <= lines; i++)
+	{
+		for (int j = 1; j <= columns; j++)
+		{
+			if (cells[i][j] == true && isChecked[i][j] == false)	//若T且没检测过
+			{
+				isChecked[i][j] = true;
+				cellPoint cell, enQueueCell;
+				cell.x = i;
+				cell.y = j;
+				waitQueue.push(cell);	//放入等待检测队列
+				while (!waitQueue.empty())
+				{
+					cell = waitQueue.front();
+					waitQueue.pop();
+					if (cell.x != 1 && cells[cell.x - 1][cell.y] == true && !isChecked[cell.x - 1][cell.y])	//左
+					{
+						isChecked[cell.x - 1][cell.y] = true;
+						enQueueCell.x = cell.x - 1;
+						enQueueCell.y = cell.y;
+						waitQueue.push(enQueueCell);
+					}
+					if (cell.x != columns && cells[cell.x + 1][cell.y] == true && !isChecked[cell.x + 1][cell.y])	//右
+					{
+						isChecked[cell.x + 1][cell.y] = true;
+						enQueueCell.x = cell.x + 1;
+						enQueueCell.y = cell.y;
+						waitQueue.push(enQueueCell);
+					}
+					if (cell.y != 1 && cells[cell.x][cell.y - 1] == true && !isChecked[cell.x][cell.y - 1])	//上
+					{
+						isChecked[cell.x][cell.y - 1] = true;
+						enQueueCell.x = cell.x;
+						enQueueCell.y = cell.y - 1;
+						waitQueue.push(enQueueCell);
+					}
+					if (cell.y != lines && cells[cell.x][cell.y + 1] == true && !isChecked[cell.x][cell.y + 1])	//下
+					{
+						isChecked[cell.x][cell.y + 1] = true;
+						enQueueCell.x = cell.x;
+						enQueueCell.y = cell.y + 1;
+						waitQueue.push(enQueueCell);
+					}
+				}
+				count++;
+			}
+		}
+	}
+
+	cout << count << endl;
 	return 0;
 }
