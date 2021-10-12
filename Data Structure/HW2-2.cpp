@@ -114,6 +114,12 @@ void Stack<T>::print()
 
 #pragma endregion
 
+/// <summary>
+/// 判断出栈序列是否合法
+/// </summary>
+/// <param name="out">出栈序列</param>
+/// <param name="in">入栈序列</param>
+/// <returns></returns>
 bool isLegal(const string out, const string in)
 {
 	Stack<char> stack;
@@ -152,7 +158,8 @@ int main()
 	string in;	//入栈序列
 	cin >> in;
 
-	/* 对于每个出栈元素：
+	/*
+		对于每个出栈元素：
 		要么 在栈顶
 		要么 还未入栈
 
