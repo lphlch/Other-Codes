@@ -103,7 +103,7 @@ void Stack<T>::pop()
 template<typename T>
 T Stack<T>::top()
 {
-	return elems[head];
+	return elems[head-1];
 }
 
 /// <summary>
