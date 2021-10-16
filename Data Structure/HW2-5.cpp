@@ -196,6 +196,7 @@ T Deque<T>::back() const
 {
 	return elems[(rear + SIZE - 1) % SIZE];
 }
+
 /// <summary>
 /// 判断队列是否为空
 /// </summary>
