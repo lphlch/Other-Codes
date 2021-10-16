@@ -3,7 +3,7 @@ module barrelshifter32_tb ();
     reg [31:0] a;
     reg [4:0]  b;
     reg [1:0]  aluc;
-    reg [31:0] c;
+    wire [31:0] c;
     barrelshifter32 uut(a,b,aluc,c);
     
     initial begin
