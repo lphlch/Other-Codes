@@ -14,17 +14,17 @@ struct Stack
 	T elems[SIZE]{};
 	int head = 0;
 	int customSize = 0;
-	void push(T elem);
-	void pop();
-	T top();
-	bool empty() const;
-	bool full() const;
-	size_t size() const;
+	void push(T elem);	//入栈
+	void pop();			//出栈
+	T top();			//返回栈顶
+	bool empty() const;	//判断空
+	bool full() const;	//判断满
+	size_t size() const;//返回占用
 	void print();
 };
 
 /// <summary>
-/// 入栈，不判断是否满栈
+/// 入栈，不判断是否满栈，时间复杂度o(1)
 /// </summary>
 /// <typeparam name="T"></typeparam>
 /// <param name="elem">入栈元素</param>
@@ -36,7 +36,7 @@ void Stack<T>::push(T elem)
 }
 
 /// <summary>
-/// 出栈，栈顶在小于0时，仍旧为0，不会报错
+/// 出栈，栈顶在小于0时，仍旧为0，不会报错，时间复杂度o(1)
 /// </summary>
 /// <typeparam name="T"></typeparam>
 template<typename T>
@@ -51,7 +51,7 @@ void Stack<T>::pop()
 }
 
 /// <summary>
-/// 返回栈顶元素
+/// 返回栈顶元素，时间复杂度o(1)
 /// </summary>
 /// <typeparam name="T"></typeparam>
 /// <returns>栈顶元素</returns>
@@ -62,7 +62,7 @@ T Stack<T>::top()
 }
 
 /// <summary>
-/// 判断是否为空
+/// 判断是否为空，时间复杂度o(1)
 /// </summary>
 /// <typeparam name="T"></typeparam>
 /// <returns></returns>
@@ -73,7 +73,7 @@ bool Stack<T>::empty() const
 }
 
 /// <summary>
-/// 判断是否为满
+/// 判断是否为满，时间复杂度o(1)
 /// </summary>
 /// <typeparam name="T"></typeparam>
 /// <returns></returns>
@@ -88,7 +88,7 @@ bool Stack<T>::full() const
 }
 
 /// <summary>
-/// 返回目前栈内使用的容量
+/// 返回目前栈内使用的容量，时间复杂度o(1)
 /// </summary>
 /// <typeparam name="T"></typeparam>
 /// <returns>容量</returns>
@@ -99,7 +99,7 @@ size_t Stack<T>::size() const
 }
 
 /// <summary>
-/// 输出栈内元素
+/// 输出栈内元素，时间复杂度o(n)
 /// </summary>
 /// <typeparam name="T"></typeparam>
 template<typename T>
@@ -114,7 +114,7 @@ void Stack<T>::print()
 #pragma endregion
 
 /// <summary>
-/// 高精度乘法
+/// 高精度乘法，时间复杂度o(n2)
 /// </summary>
 /// <param name="mut1">乘数1</param>
 /// <param name="mut2">乘数2</param>
@@ -174,7 +174,7 @@ struct Data
 Stack<Data> myStack;
 
 /// <summary>
-/// 模拟阶乘
+/// 模拟阶乘，时间复杂度o(n3)(因为递归n次，每次递归的高精度乘法复杂度n2)
 /// </summary>
 /// <typeparam name="int"></typeparam>
 /// <returns></returns>
