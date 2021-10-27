@@ -1,6 +1,8 @@
+
 //2021/10/26
 
 #include <iostream>
+#include <queue>
 using namespace std;
 
 #pragma region BiTreeNode
@@ -13,6 +15,7 @@ public:
 	void preOrderTraverse(BiTreeNode<T>* root, void(*fun)(BiTreeNode<T>*));
 	void inOrderTraverse(BiTreeNode<T>* root, void(*fun)(BiTreeNode<T>*));
 	void postOrderTraverse(BiTreeNode<T>* root, void(*fun)(BiTreeNode<T>*));
+  void levelOrderTraverse(BiTreeNode<T>* root,void(*fun)(BiTreeNode<T>*));
 	T getData();
 private:
 	T data;
@@ -80,9 +83,9 @@ void BiTreeNode<T>::inOrderTraverse(BiTreeNode<T>* node, void(*fun)(BiTreeNode<T
 	{
 		return;
 	}
-	preOrderTraverse(node->leftChild, fun);
+	inOrderTraverse(node->leftChild, fun);
 	fun(node);	//Do something
-	preOrderTraverse(node->rightChild, fun);
+	inOrderTraverse(node->rightChild, fun);
 }
 
 /// <summary>
@@ -98,11 +101,15 @@ void BiTreeNode<T>::postOrderTraverse(BiTreeNode<T>* node, void(*fun)(BiTreeNode
 	{
 		return;
 	}
-	preOrderTraverse(node->leftChild, fun);
-	preOrderTraverse(node->rightChild, fun);
+	postOrderTraverse(node->leftChild, fun);
+	postOrderTraverse(node->rightChild, fun);
 	fun(node);	//Do something
 }
 
+  void levelOrderTraverse(BiTreeNode<T>* root,void(*fun)(BiTreeNode<T>*))
+  {
+  
+  }
 /// <summary>
 /// Return data
 /// </summary>
@@ -118,7 +125,7 @@ T BiTreeNode<T>::getData()
 BiTreeNode<char>* tree = new(BiTreeNode<char>);
 
 /// <summary>
-/// Do something in the node.
+/// Do something to the node.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 /// <param name="node"></param>
@@ -133,6 +140,9 @@ int main()
 	int n;
 	tree->create(&tree);
 	tree->preOrderTraverse(tree, functionForBiTreeNode<char>);
-
+	tree->inOrderTraverse(tree,functionForBiTreeNode<char>);
+  	tree->postOrderTraverse(tree,functionForBiTreeNode<char>);
+   
+   
 	return 0;
 }
