@@ -1,21 +1,18 @@
-
 //2021/10/26
-
 #include <iostream>
 #include <queue>
 using namespace std;
-
 #pragma region BiTreeNode
 template<typename T>
 class BiTreeNode
 {
 public:
 	void create(BiTreeNode<T>** root);
-	void clear(BiTreeNode<T>* root);
+	void print(BiTreeNode<T>* root, int level = 0);
 	void preOrderTraverse(BiTreeNode<T>* root, void(*fun)(BiTreeNode<T>*));
 	void inOrderTraverse(BiTreeNode<T>* root, void(*fun)(BiTreeNode<T>*));
 	void postOrderTraverse(BiTreeNode<T>* root, void(*fun)(BiTreeNode<T>*));
-  void levelOrderTraverse(BiTreeNode<T>* root,void(*fun)(BiTreeNode<T>*));
+	void levelOrderTraverse(BiTreeNode<T>* root, void(*fun)(BiTreeNode<T>*));
 	T getData();
 private:
 	T data;
@@ -49,6 +46,30 @@ void BiTreeNode<T>::create(BiTreeNode<T>** node)
 		(*node)->data = c;	//Traverse to create new node.
 		(*node)->create(&((*node)->leftChild));
 		(*node)->create(&((*node)->rightChild));
+	}
+}
+
+/// <summary>
+/// Print tree in level. Rotate 90°CCW.
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="root">Pointer to root</param>
+/// <param name="level">Level of the node, use default value</param>
+template<typename T>
+void BiTreeNode<T>::print(BiTreeNode<T>* node, int level)
+{
+	if (node->rightChild != NULL)
+	{
+		node->rightChild->print(node->rightChild, level + 1);	//Print right child first.
+	}
+	for (int i = 0; i < level; i++)
+	{
+		cout << "     ";
+	}
+	cout << node->data << endl;
+	if (node->leftChild != NULL)
+	{
+		node->leftChild->print(node->leftChild, level + 1);
 	}
 }
 
@@ -106,10 +127,36 @@ void BiTreeNode<T>::postOrderTraverse(BiTreeNode<T>* node, void(*fun)(BiTreeNode
 	fun(node);	//Do something
 }
 
-  void levelOrderTraverse(BiTreeNode<T>* root,void(*fun)(BiTreeNode<T>*))
-  {
-  
-  }
+/// <summary>
+/// Traversing binary tree in level order.
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="root">Pointer to root</param>
+/// <param name="fun">what to do</param>
+template<typename T>
+void BiTreeNode<T>::levelOrderTraverse(BiTreeNode<T>* root, void(*fun)(BiTreeNode<T>*))
+{
+	queue<BiTreeNode*> q;
+	/* Use queue to save nodes which to be search. The same as BFS. */
+	if (root != NULL)
+	{
+		q.push(root);
+	}
+	while (!q.empty())
+	{
+		fun(q.front());	//Traverse front node.
+		if (q.front()->leftChild != NULL)
+		{
+			q.push(q.front()->leftChild);
+		}
+		if (q.front()->rightChild != NULL)
+		{
+			q.push(q.front()->rightChild);
+		}
+		q.pop();
+	}
+}
+
 /// <summary>
 /// Return data
 /// </summary>
@@ -139,10 +186,19 @@ int main()
 {
 	int n;
 	tree->create(&tree);
+
 	tree->preOrderTraverse(tree, functionForBiTreeNode<char>);
-	tree->inOrderTraverse(tree,functionForBiTreeNode<char>);
-  	tree->postOrderTraverse(tree,functionForBiTreeNode<char>);
-   
-   
+	cout << endl;
+
+	tree->inOrderTraverse(tree, functionForBiTreeNode<char>);
+	cout << endl;
+
+	tree->postOrderTraverse(tree, functionForBiTreeNode<char>);
+	cout << endl;
+
+	tree->levelOrderTraverse(tree, functionForBiTreeNode<char>);
+	cout << endl;
+
+	tree->print(tree);
 	return 0;
 }
