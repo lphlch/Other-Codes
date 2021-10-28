@@ -11,11 +11,9 @@ module Synchronous_D_FF_tb ();
         #30
         d = 1;
         #30
-        d = 0;
-        #30
         reset = 0;
         #30
-        d = 1;
+        d = 0;
     end
     
     initial begin
