@@ -6,24 +6,23 @@ module Synchronous_D_FF_tb ();
     Synchronous_D_FF uut (clk,d,reset,out1,out2);
     
     initial begin
-        reset = 0;
+        reset = 1;
         d     = 0;
         #30
         d = 1;
         #30
         d = 0;
         #30
-        d     = 1;
-        reset = 1;
+        reset = 0;
         #30
-        d = 0;
+        d = 1;
     end
     
     initial begin
         clk = 0;
         
-        repeat(10) begin
-            #13 clk = ~clk;
+        repeat(20) begin
+            #8 clk = ~clk;
         end
     end
     
