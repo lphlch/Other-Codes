@@ -4,8 +4,8 @@
 #include <vector>
 #include <string>
 
-#define LINK  1	//child
-#define THRE  0	//node
+#define LINK  0	//child
+#define THRE  1	//node
 #define END  9
 using namespace std;
 
@@ -16,6 +16,7 @@ struct Relate
 {
 	int succTag;
 	int prevTag;
+	bool isKey;
 };
 
 vector < Relate >  relates;
@@ -106,6 +107,7 @@ void BiTreeNode<T>::thre(BiTreeNode<T>* node)
 	thre(node->rightChild);
 }
 
+
 /// <summary>
 /// InOrder traverse and save the predecessor and successor
 /// </summary>
@@ -118,6 +120,7 @@ void BiTreeNode<T>::search(BiTreeNode<T>* root, char& name, vector < Relate >& r
 {
 	BiTreeNode<T>* nextNode = root;
 	Relate relate;
+
 	while (nextNode != NULL)
 	{
 		while (nextNode->leftTag == LINK)	//Reach the left bottom
@@ -126,8 +129,30 @@ void BiTreeNode<T>::search(BiTreeNode<T>* root, char& name, vector < Relate >& r
 		}
 
 		result = result + nextNode->getData();
-		if (nextNode->data == name)
+		if (!nextNode->rightChild)		//Only tag be saved. Beacuse the predecessor or successor is not equal to the child point at
 		{
+			relate.succTag = END;
+		}
+		else
+		{
+			relate.succTag = nextNode->rightTag;
+		}
+		if (!nextNode->leftChild)
+		{
+			relate.prevTag = END;
+		}
+		else
+		{
+			relate.prevTag = nextNode->leftTag;
+		}
+		relate.isKey = (nextNode->data == name ? true : false);
+		relates.push_back(relate);
+
+		while (nextNode->rightTag == THRE && nextNode->rightChild != NULL)	//If right child is not child, move to the thre
+		{
+			nextNode = nextNode->rightChild;	//Enter right thre
+
+			result = result + nextNode->getData();
 			if (!nextNode->rightChild)		//Only tag be saved. Beacuse the predecessor or successor is not equal to the child point at
 			{
 				relate.succTag = END;
@@ -144,34 +169,8 @@ void BiTreeNode<T>::search(BiTreeNode<T>* root, char& name, vector < Relate >& r
 			{
 				relate.prevTag = nextNode->leftTag;
 			}
+			relate.isKey = (nextNode->data == name ? true : false);
 			relates.push_back(relate);
-		}
-
-		while (nextNode->rightTag == THRE && nextNode->rightChild != NULL)	//If right child is not child, move to the thre
-		{
-			nextNode = nextNode->rightChild;	//Enter right thre
-
-			result = result + nextNode->getData();
-			if (nextNode->data == name)
-			{
-				if (!nextNode->rightChild)
-				{
-					relate.succTag = END;
-				}
-				else
-				{
-					relate.succTag = nextNode->rightTag;
-				}
-				if (!nextNode->leftChild)
-				{
-					relate.prevTag = END;
-				}
-				else
-				{
-					relate.prevTag = nextNode->leftTag;
-				}
-				relates.push_back(relate);
-			}
 		}
 
 		nextNode = nextNode->rightChild;	//Enter right child
@@ -200,37 +199,34 @@ int main()
 	char key;
 	cin >> key;
 	tree->search(tree, key, relates);
-	long long pos = 0;
+	int c = 0;
 	cout << result << endl;
-	if (relates.size() == 0)
+
+	for (int i=0;i<relates.size();i++)
 	{
-		cout << "Not found" << endl;
-	}
-	for (Relate relate : relates)
-	{
-		for (long long i = pos; i < result.length(); i++)
+		if (relates[i].isKey == true)
 		{
-			if (result[i] == key)
+			c++;
+			if (i + 1 >= result.length() || relates[i+1].succTag == END)
 			{
-				pos = i + 1;
-				break;
+				cout << "succ is NULL" << endl;
+			}
+			else
+			{
+				cout << "succ is " << result[i+1] << relates[i+1].succTag << endl;
+			}
+			if (i - 1 < 0 ||relates[i-1].prevTag == END)
+			{
+				cout << "prev is NULL" << endl;
+			}
+			else
+			{
+				cout << "prev is " << result[i - 1] << relates[i - 1].prevTag << endl;
 			}
 		}
-		if (relate.succTag == END || pos > result.length())
-		{
-			cout << "succ is NULL" << endl;
-		}
-		else
-		{
-			cout << "succ is " << result[pos] << relate.succTag << endl;
-		}
-		if (relate.prevTag == END || pos - 2 < 0)
-		{
-			cout << "prev is NULL" << endl;
-		}
-		else
-		{
-			cout << "prev is " << result[pos - 2] << relate.prevTag << endl;
-		}
+	}
+	if (c == 0)
+	{
+		cout << "Not found" << endl;
 	}
 }
