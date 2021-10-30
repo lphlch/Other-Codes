@@ -1,5 +1,5 @@
 #include <iostream>
-#include <queue>
+#include <cstring>
 
 using namespace std;
 const int MAXSIZE = 100050;
@@ -11,9 +11,15 @@ struct BiTreeNode
 };
 BiTreeNode biTreeNodes1[MAXSIZE];
 BiTreeNode biTreeNodes2[MAXSIZE];
-bool isChecked[MAXSIZE];
-int depthTemp[MAXSIZE];
+bool isChecked[MAXSIZE];	//DFS flag
+int depthTemp[MAXSIZE];		//Temporary depth
 
+/// <summary>
+/// DFS get depth of the node
+/// </summary>
+/// <param name="nodes">Tree the node belong to</param>
+/// <param name="pos">Position of the node</param>
+/// <returns>Depth of the node</returns>
 int getDepth(BiTreeNode nodes[], int pos)
 {
 	if (isChecked[pos])
@@ -35,6 +41,12 @@ int getDepth(BiTreeNode nodes[], int pos)
 	return depthTemp[pos];
 }
 
+/// <summary>
+/// DFS get max depth of a tree
+/// </summary>
+/// <param name="nodes">Tree</param>
+/// <param name="nodeCount">How many nodes of the tree</param>
+/// <returns>Max depth</returns>
 int getMaxDepth(BiTreeNode nodes[], int nodeCount)
 {
 	int maxDepth = 0;
@@ -45,70 +57,39 @@ int getMaxDepth(BiTreeNode nodes[], int nodeCount)
 		maxDepth = max(maxDepth, tempDepth);
 	}
 	return maxDepth;
-	//DFS
-	//queue<int> q;
-	//int levelNow = 0;
-	//depthTemp[i] = 1;
-	//q.push(i);
-	//while (!q.empty())
-	//{
-	//	levelNow = depthTemp[q.front()];
-	//	if (nodes[q.front()].leftChild != MAXSIZE)
-	//	{
-	//		if (isChecked[nodes[q.front()].leftChild])
-	//		{
-	//			// End of this branch.
-	//			// The depth of the branch equal to this level + depth of the node.
-	//			if (levelNow + depthTemp[nodes[q.front()].leftChild] > depthMax)
-	//			{
-	//				depthMax = levelNow + depthTemp[nodes[q.front()].leftChild];
-	//			}
-	//		}
-	//		else
-	//		{
-	//			q.push(nodes[q.front()].leftChild);
-	//			depthTemp[nodes[q.front()].leftChild] = levelNow + 1;
-	//			if (depthMax < levelNow + 1)
-	//			{
-	//				depthMax = levelNow + 1;
-	//			}
-	//		}
-	//	}
-
-	//	if (nodes[q.front()].rightChild != MAXSIZE)
-	//	{
-	//		if (isChecked[nodes[q.front()].rightChild])
-	//		{
-	//			if (levelNow + depthTemp[nodes[q.front()].rightChild] > depthMax)
-	//			{
-	//				depthMax = levelNow + depthTemp[nodes[q.front()].rightChild];
-	//			}
-	//		}
-	//		else
-	//		{
-	//			q.push(nodes[q.front()].rightChild);
-	//			depthTemp[nodes[q.front()].rightChild] = levelNow + 1;
-	//		}
-	//	}
-
-	//	isChecked[q.front()] = true;
-	//	q.pop();
-	//}
-	//depthTemp[i] = depthMax;	//Assign depth to the root.
 }
 
+/// <summary>
+/// Check if two trees have the same child
+/// </summary>
+/// <param name="nodes1">Tree1</param>
+/// <param name="nodeCount1">How many nodes of tree1</param>
+/// <param name="nodes2">Tree2</param>
+/// <param name="nodeCount2">How many nodes of tree2</param>
+/// <returns></returns>
 bool checkChild(BiTreeNode nodes1[], int nodeCount1, BiTreeNode nodes2[], int nodeCount2)
 {
 	for (int i = 0; i < nodeCount1; i++)
 	{
-		for (int j = 0; j < nodeCount2; j++)
+		for (int j = i; j < nodeCount2; j++)
 		{
 			if (nodes1[i].name == nodes2[j].name)
 			{
-				if (nodes1[nodes1[i].leftChild].name != nodes2[nodes2[j].leftChild].name &&
-					nodes1[nodes1[i].rightChild].name != nodes2[nodes2[j].leftChild].name
-					)
+				if (nodes1[nodes1[i].leftChild].name == nodes2[nodes2[j].leftChild].name &&
+					nodes1[nodes1[i].rightChild].name == nodes2[nodes2[j].rightChild].name)
+
 				{
+					;
+				}
+				else if (nodes1[nodes1[i].rightChild].name == nodes2[nodes2[j].leftChild].name &&
+					nodes1[nodes1[i].leftChild].name == nodes2[nodes2[j].rightChild].name)
+				{
+					;
+				}
+				else
+				{
+					/*cerr << nodes1[i].name << ' ' << nodes1[nodes1[i].leftChild].name << ' ' << nodes1[nodes1[i].rightChild].name <<
+						' ' << nodes2[j].name << ' ' << nodes2[nodes2[j].leftChild].name << ' ' << nodes2[nodes2[j].rightChild].name << endl;*/
 					return false;
 				}
 				break;
@@ -117,60 +98,70 @@ bool checkChild(BiTreeNode nodes1[], int nodeCount1, BiTreeNode nodes2[], int no
 	}
 	return true;
 }
+
 int main()
 {
 	int nodeCount1 = 0;
 	cin >> nodeCount1;
-	while (true)
+	for (int i = 0; i < nodeCount1; i++)
 	{
-		cin >> biTreeNodes1[nodeCount1].name;
+		cin >> biTreeNodes1[i].name;
 		//Check the input, if is #, point to MAXSIZE.
-		cin >> biTreeNodes1[nodeCount1].leftChild;
+		cin >> biTreeNodes1[i].leftChild;
 		if (cin.fail())
 		{
 			cin.clear();
 			getchar();
-			biTreeNodes1[nodeCount1].leftChild = MAXSIZE;
+			biTreeNodes1[i].leftChild = MAXSIZE;
 		}
-		cin >> biTreeNodes1[nodeCount1].rightChild;
+		cin >> biTreeNodes1[i].rightChild;
 		if (cin.fail())
 		{
 			cin.clear();
 			getchar();
-			biTreeNodes1[nodeCount1].rightChild = MAXSIZE;
+			biTreeNodes1[i].rightChild = MAXSIZE;
 		}
 	}
 
 	int nodeCount2 = 0;
 	cin >> nodeCount2;
-	while (true)
+	for (int i = 0; i < nodeCount2; i++)
 	{
-		cin >> biTreeNodes2[nodeCount2].name;
+		cin >> biTreeNodes2[i].name;
 		//Check the input, if is #, point to MAXSIZE.
-		cin >> biTreeNodes2[nodeCount2].leftChild;
+		cin >> biTreeNodes2[i].leftChild;
 		if (cin.fail())
 		{
 			cin.clear();
 			getchar();
-			biTreeNodes2[nodeCount2].leftChild = MAXSIZE;
+			biTreeNodes2[i].leftChild = MAXSIZE;
 		}
-		cin >> biTreeNodes2[nodeCount2].rightChild;
+		cin >> biTreeNodes2[i].rightChild;
 		if (cin.fail())
 		{
 			cin.clear();
 			getchar();
-			biTreeNodes2[nodeCount2].rightChild = MAXSIZE;
+			biTreeNodes2[i].rightChild = MAXSIZE;
 		}
 	}
 
-	if (nodeCount1 != nodeCount2 || !checkChild(biTreeNodes1, nodeCount1, biTreeNodes2, nodeCount2))
+	if (nodeCount1 != nodeCount2)
 	{
 		cout << "No" << endl;
 	}
-	else
+	else if (checkChild(biTreeNodes1, nodeCount1, biTreeNodes2, nodeCount2))
 	{
 		cout << "Yes" << endl;
 	}
+	else
+	{
+		cout << "No" << endl;
+	}
+
+	cout << getMaxDepth(biTreeNodes1, nodeCount1) << endl;
+	memset(isChecked, false, sizeof(isChecked));	//Reset
+	memset(depthTemp, false, sizeof(depthTemp));
+	cout << getMaxDepth(biTreeNodes2, nodeCount2) << endl;
 
 	return 0;
 }
