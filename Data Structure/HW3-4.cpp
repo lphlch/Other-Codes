@@ -6,12 +6,10 @@
 
 #define LINK  0	//child
 #define THRE  1	//node
-#define END  9
 using namespace std;
 
 string result;//save the result of the sequence
 
-#pragma region BiTreeNode
 struct Relate
 {
 	int succTag;
@@ -131,7 +129,7 @@ void BiTreeNode<T>::search(BiTreeNode<T>* root, char& name, vector < Relate >& r
 		result = result + nextNode->getData();
 		if (!nextNode->rightChild)		//Only tag be saved. Beacuse the predecessor or successor is not equal to the child point at
 		{
-			relate.succTag = END;
+			relate.succTag = THRE;
 		}
 		else
 		{
@@ -139,7 +137,7 @@ void BiTreeNode<T>::search(BiTreeNode<T>* root, char& name, vector < Relate >& r
 		}
 		if (!nextNode->leftChild)
 		{
-			relate.prevTag = END;
+			relate.prevTag = THRE;
 		}
 		else
 		{
@@ -155,7 +153,7 @@ void BiTreeNode<T>::search(BiTreeNode<T>* root, char& name, vector < Relate >& r
 			result = result + nextNode->getData();
 			if (!nextNode->rightChild)		//Only tag be saved. Beacuse the predecessor or successor is not equal to the child point at
 			{
-				relate.succTag = END;
+				relate.succTag = THRE;
 			}
 			else
 			{
@@ -163,7 +161,7 @@ void BiTreeNode<T>::search(BiTreeNode<T>* root, char& name, vector < Relate >& r
 			}
 			if (!nextNode->leftChild)
 			{
-				relate.prevTag = END;
+				relate.prevTag = THRE;
 			}
 			else
 			{
@@ -187,27 +185,25 @@ T BiTreeNode<T>::getData()
 {
 	return this->data;
 }
-#pragma endregion
 
 BiTreeNode<char>* tree = new(BiTreeNode<char>);
 
 int main()
 {
-	vector < Relate > relates;
 	tree->create(&tree);
 	tree->thre(tree);
 	char key;
 	cin >> key;
 	tree->search(tree, key, relates);
-	int c = 0;
+	long long c = 0;
 	cout << result << endl;
 
-	for (int i=0;i<relates.size();i++)
+	for (long long i=0;i<relates.size();i++)
 	{
 		if (relates[i].isKey == true)
 		{
 			c++;
-			if (i + 1 >= result.length() || relates[i+1].succTag == END)
+			if (i + 1 >= result.size() /*|| relates[i+1].succTag == END*/)
 			{
 				cout << "succ is NULL" << endl;
 			}
@@ -215,7 +211,7 @@ int main()
 			{
 				cout << "succ is " << result[i+1] << relates[i+1].succTag << endl;
 			}
-			if (i - 1 < 0 ||relates[i-1].prevTag == END)
+			if (i - 1 < 0/* ||relates[i-1].prevTag == END*/)
 			{
 				cout << "prev is NULL" << endl;
 			}
