@@ -4,6 +4,12 @@
 #include <time.h>
 using namespace std;
 
+time_t start = clock();
+time_t now = start;
+time_t createTime = start;
+time_t searchTime = start;
+time_t checkTime = start;
+
 #pragma region BiTreeNode
 template <typename T>
 class BiTreeNode
@@ -14,6 +20,7 @@ public:
 	void search(BiTreeNode<T>* node, string key, BiTreeNode<T>*& result);
 	void printPreOrder(BiTreeNode<T>* node, int level);
 	T getData();
+
 private:
 	T data;
 	BiTreeNode* leftChild = NULL;
@@ -92,9 +99,11 @@ void BiTreeNode<T>::checkRelation(BiTreeNode<T>* root, string mem1, string mem2,
 	//search the key in the binary tree first
 	BiTreeNode<T>* node1 = NULL;
 	BiTreeNode<T>* node2 = NULL;
+	now = clock();
 	search(root, mem1, node1);
 	search(root, mem2, node2);
-
+	searchTime += clock() - now;
+	now = clock();
 	if (node1 == NULL || node2 == NULL)
 	{
 		cerr << "No such member" << endl;
@@ -139,16 +148,17 @@ void BiTreeNode<T>::checkRelation(BiTreeNode<T>* root, string mem1, string mem2,
 	else if (relation == "ancestor")
 	{
 		//if it is ancestor, the mem1 must be the parent of mem2
+		if (node2 == node1)
+		{
+			cout << "True" << endl;
+			return;
+		}
 		if (node2->parent == NULL)
 		{
 			cout << "False" << endl;
 		}
 		else
 		{
-			if (node2 == node1)
-			{
-				cout << "True" << endl;
-			}
 			while (node2->parent != node1)
 			{
 				node2 = node2->parent;
@@ -164,6 +174,11 @@ void BiTreeNode<T>::checkRelation(BiTreeNode<T>* root, string mem1, string mem2,
 	else if (relation == "descendant")
 	{
 		//if it is descendant, the mem2 must be the parent of mem1
+		if (node2 == node1)
+		{
+			cout << "True" << endl;
+			return;
+		}
 		if (node1->parent == NULL)
 		{
 			cout << "False" << endl;
@@ -221,7 +236,7 @@ void BiTreeNode<T>::printPreOrder(BiTreeNode<T>* node, int level)
 	{
 		cout << " ";
 	}
-	cout << node->getData() << "     parent: "<<(node->parent?node->parent->data : "NULL") << endl;
+	cout << node->getData() << "     parent: " << (node->parent ? node->parent->data : "NULL") << endl;
 	printPreOrder(node->leftChild, level + 1);
 	printPreOrder(node->rightChild, level);
 }
@@ -276,14 +291,15 @@ int main()
 	cin >> n >> m;
 	string key;
 
-	time_t start = clock();
 	while (n != 0)
 	{
+		now = clock();
+
 		tree->create(&tree, n);
+		createTime += clock() - now;
 		//tree->printPreOrder(tree, 0);
 		vector<string> keySplit(6, "");
 		//cerr the time cost
-		cerr << "Time cost in create: " << (clock() - start) / (double)CLOCKS_PER_SEC << "s" << endl;
 
 		while (m != 0)
 		{
@@ -294,9 +310,13 @@ int main()
 											 //the keySplit[3] is the relation
 											 //the keySplit[5] is the second member
 			tree->checkRelation(tree, keySplit[0], keySplit[5].substr(0, 9), keySplit[3]);
+			checkTime += clock() - now;
 			m--;
 		}
-		cerr << "Time cost in this check: " << (clock() - start) / (double)CLOCKS_PER_SEC << "s" << endl;
+		cout << endl;
 		cin >> n >> m; //reinput
 	}
+	cerr << "Time cost in create: " << (createTime - start) / (double)CLOCKS_PER_SEC << "s" << endl;
+	cerr << "Time cost in search: " << (searchTime - start) / (double)CLOCKS_PER_SEC << "s" << endl;
+	cerr << "Time cost in check: " << (checkTime - start) / (double)CLOCKS_PER_SEC << "s" << endl;
 }
