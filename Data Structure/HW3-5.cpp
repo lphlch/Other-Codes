@@ -16,8 +16,8 @@ class BiTreeNode
 {
 public:
 	void create(BiTreeNode<T>** root, int n);
-	void checkRelation(BiTreeNode<T>* root, string mem1, string mem2, string relation);
-	void search(BiTreeNode<T>* node, string key, BiTreeNode<T>*& result);
+	void checkRelation(BiTreeNode<T>* root, T mem1, T mem2, string relation);
+	void search(BiTreeNode<T>* node, T key, BiTreeNode<T>*& result);
 	void printPreOrder(BiTreeNode<T>* node, int level);
 	T getData();
 
@@ -94,7 +94,7 @@ void BiTreeNode<T>::create(BiTreeNode<T>** root, int n)
 }
 
 template <typename T>
-void BiTreeNode<T>::checkRelation(BiTreeNode<T>* root, string mem1, string mem2, string relation)
+void BiTreeNode<T>::checkRelation(BiTreeNode<T>* root, T mem1, T mem2, string relation)
 {
 	//search the key in the binary tree first
 	BiTreeNode<T>* node1 = NULL;
@@ -210,7 +210,7 @@ void BiTreeNode<T>::checkRelation(BiTreeNode<T>* root, string mem1, string mem2,
 /// <param name="root">Pointer to root</param>
 /// <param name="fun">what to do</param>
 template <typename T>
-void BiTreeNode<T>::search(BiTreeNode<T>* node, string key, BiTreeNode<T>*& result)
+void BiTreeNode<T>::search(BiTreeNode<T>* node, T key, BiTreeNode<T>*& result)
 {
 	if (node == NULL)
 	{
