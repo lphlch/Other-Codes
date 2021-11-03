@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 #include <time.h>
+#include <map>
+
 using namespace std;
 
 time_t start = clock();
@@ -17,7 +19,6 @@ class BiTreeNode
 public:
 	void create(BiTreeNode<T>** root, int n);
 	void checkRelation(BiTreeNode<T>* root, T mem1, T mem2, string relation);
-	void search(BiTreeNode<T>* node, T key, BiTreeNode<T>*& result);
 	void printPreOrder(BiTreeNode<T>* node, int level);
 	T getData();
 
@@ -28,6 +29,9 @@ private:
 	BiTreeNode* parent = NULL; //save the parent node
 	int level;				   //save the level of the node
 };
+
+//use map to save node pointer
+map<string, BiTreeNode<string>*> nodeMap;
 
 /// <summary>
 /// create a binary tree in the form of a complete binary tree
@@ -50,6 +54,7 @@ void BiTreeNode<T>::create(BiTreeNode<T>** root, int n)
 	cin >> str;
 	cin.get();
 	(*root)->data = str;
+	nodeMap.insert(pair<T, BiTreeNode<T>*>(str, (*root)));
 	(*root)->level = level;
 	BiTreeNode<T>* node;
 
@@ -62,6 +67,7 @@ void BiTreeNode<T>::create(BiTreeNode<T>** root, int n)
 		level = str.find_first_not_of(' ', 0);
 		//str.erase(0, level);
 		node->data = str.substr(level, str.length() - level);
+		nodeMap.insert(pair<T, BiTreeNode<T>*>(node->data, node));
 		if (level > preLevel)
 		{
 			//the people is a child of pre people, making it as left child
@@ -93,6 +99,14 @@ void BiTreeNode<T>::create(BiTreeNode<T>** root, int n)
 	}
 }
 
+/// <summary>
+/// check if realtion between two members is true
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="root">the root of the binary tree</param>
+/// <param name="mem1">first member</param>
+/// <param name="mem2">second member</param>
+/// <param name="relation">relation between two members</param>
 template <typename T>
 void BiTreeNode<T>::checkRelation(BiTreeNode<T>* root, T mem1, T mem2, string relation)
 {
@@ -100,8 +114,27 @@ void BiTreeNode<T>::checkRelation(BiTreeNode<T>* root, T mem1, T mem2, string re
 	BiTreeNode<T>* node1 = NULL;
 	BiTreeNode<T>* node2 = NULL;
 	now = clock();
-	search(root, mem1, node1);
-	search(root, mem2, node2);
+	//find the mem1 in nodeMap and get the second
+	if (nodeMap.find(mem1) != nodeMap.end())
+	{
+		node1 = nodeMap.find(mem1)->second;
+	}
+	else
+	{
+		cout << "The member " << mem1 << " is not in the tree." << endl;
+		return;
+	}
+	//find the mem2 in nodeMap and get the second
+	if (nodeMap.find(mem2) != nodeMap.end())
+	{
+		node2 = nodeMap.find(mem2)->second;
+	}
+	else
+	{
+		cout << "The member " << mem2 << " is not in the tree." << endl;
+		return;
+	}
+
 	searchTime += clock() - now;
 	now = clock();
 	if (node1 == NULL || node2 == NULL)
@@ -204,27 +237,11 @@ void BiTreeNode<T>::checkRelation(BiTreeNode<T>* root, T mem1, T mem2, string re
 }
 
 /// <summary>
-/// Traversing binary tree in preorder.
+/// print the binary tree in preorder
 /// </summary>
 /// <typeparam name="T"></typeparam>
-/// <param name="root">Pointer to root</param>
-/// <param name="fun">what to do</param>
-template <typename T>
-void BiTreeNode<T>::search(BiTreeNode<T>* node, T key, BiTreeNode<T>*& result)
-{
-	if (node == NULL)
-	{
-		return;
-	}
-	if (node->data == key)
-	{
-		result = node;
-		return;
-	}
-	search(node->leftChild, key, result);
-	search(node->rightChild, key, result);
-}
-
+/// <param name="node"></param>
+/// <param name="level"> blanks before the node</param>
 template <typename T>
 void BiTreeNode<T>::printPreOrder(BiTreeNode<T>* node, int level)
 {
@@ -314,6 +331,7 @@ int main()
 			m--;
 		}
 		cout << endl;
+		nodeMap.clear();
 		cin >> n >> m; //reinput
 	}
 	cerr << "Time cost in create: " << (createTime - start) / (double)CLOCKS_PER_SEC << "s" << endl;
