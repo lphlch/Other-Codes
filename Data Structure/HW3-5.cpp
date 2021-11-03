@@ -16,8 +16,8 @@ class BiTreeNode
 {
 public:
 	void create(BiTreeNode<T>** root, int n);
-	void checkRelation(BiTreeNode<T>* root, T mem1, T mem2, string relation);
-	void search(BiTreeNode<T>* node, T key, BiTreeNode<T>*& result);
+	void checkRelation(BiTreeNode<T>* root, string mem1, string mem2, string relation);
+	void search(BiTreeNode<T>* node, const char* key, BiTreeNode<T>*& result);
 	void printPreOrder(BiTreeNode<T>* node, int level);
 	T getData();
 
@@ -46,9 +46,9 @@ void BiTreeNode<T>::create(BiTreeNode<T>** root, int n)
 	BiTreeNode<T>* preNode = *root;
 	n--;
 
-	string str;
-	cin >> str;
-	cin.get();
+	char str[100];
+	getchar();
+	cin.getline(str, 100,'\n');
 	(*root)->data = str;
 	(*root)->level = level;
 	BiTreeNode<T>* node;
@@ -56,12 +56,23 @@ void BiTreeNode<T>::create(BiTreeNode<T>** root, int n)
 	while (n > 0)
 	{
 		node = new (BiTreeNode<T>);
-		getline(cin, str);
+		cin.getline(str, 100,'\n');
 
 		//get the whole line, count blank before level the node.
-		level = str.find_first_not_of(' ', 0);
-		//str.erase(0, level);
-		node->data = str.substr(level, str.length() - level);
+		for (int i = 0; i < 100; i++)
+		{
+			if (str[i] == ' ')
+			{
+				level++;
+			}
+			else
+			{
+				break;
+			}
+		}
+		//delete the blank
+		node->data=&str[level];
+
 		if (level > preLevel)
 		{
 			//the people is a child of pre people, making it as left child
@@ -94,14 +105,18 @@ void BiTreeNode<T>::create(BiTreeNode<T>** root, int n)
 }
 
 template <typename T>
-void BiTreeNode<T>::checkRelation(BiTreeNode<T>* root, T mem1, T mem2, string relation)
+void BiTreeNode<T>::checkRelation(BiTreeNode<T>* root, string mem1, string mem2, string relation)
 {
 	//search the key in the binary tree first
 	BiTreeNode<T>* node1 = NULL;
 	BiTreeNode<T>* node2 = NULL;
 	now = clock();
-	search(root, mem1, node1);
-	search(root, mem2, node2);
+
+	const char* mem1_c = mem1.c_str();
+	const char* mem2_c = mem2.c_str();
+
+	search(root, mem1_c, node1);
+	search(root, mem2_c, node2);
 	searchTime += clock() - now;
 	now = clock();
 	if (node1 == NULL || node2 == NULL)
@@ -210,13 +225,13 @@ void BiTreeNode<T>::checkRelation(BiTreeNode<T>* root, T mem1, T mem2, string re
 /// <param name="root">Pointer to root</param>
 /// <param name="fun">what to do</param>
 template <typename T>
-void BiTreeNode<T>::search(BiTreeNode<T>* node, T key, BiTreeNode<T>*& result)
+void BiTreeNode<T>::search(BiTreeNode<T>* node,const char* key, BiTreeNode<T>*& result)
 {
 	if (node == NULL)
 	{
 		return;
 	}
-	if (node->data == key)
+	if (!strcmp(node->data , key))
 	{
 		result = node;
 		return;
@@ -282,7 +297,7 @@ void splitString(vector<string>& result, string str, char delim)
 	}
 }
 
-BiTreeNode<string>* tree = new (BiTreeNode<string>);
+BiTreeNode<char*>* tree = new (BiTreeNode< char* >);
 
 int main()
 {
@@ -297,7 +312,7 @@ int main()
 
 		tree->create(&tree, n);
 		createTime += clock() - now;
-		//tree->printPreOrder(tree, 0);
+		tree->printPreOrder(tree, 0);
 		vector<string> keySplit(6, "");
 		//cerr the time cost
 
