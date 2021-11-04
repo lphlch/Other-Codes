@@ -13,8 +13,6 @@ module Divider_tb ();
     end
     
     initial begin
-        reset = 1;
-        #20
         reset = 0;
         #500
         reset = 1;
