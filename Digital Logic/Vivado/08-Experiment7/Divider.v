@@ -2,23 +2,27 @@ module Divider (input I_CLK,
                 input rst,
                 output O_CLK);
     
-    parameter i       = 20;
-    reg[31:0] counter = 0;
-    reg outputT       = 0;
-    always @(posedge I_CLK or posedge rst)
+    parameter i = 20;
+    reg[31:0] counter=0;
+    reg outputT=0;
+    always @(posedge I_CLK or posedge rst) begin
         if (rst) begin
-            counter = 0;
-            outputT   = 1;
+            counter <= 0;
+            outputT <= 1;
         end
-        else if (counter < i / 2 ) begin
-            counter = counter + 1;
-            outputT   = outputT;
+        else if (counter < i/2) begin
+            counter <= counter + 1;
+            outputT <= 0;
+        end
+        else if (counter ==i) begin
+            counter <= 1;
+            outputT <= 0;
         end
         else begin
-            counter = 1;
-            outputT   = ~outputT;
+            counter <= counter + 1;
+            outputT <= 1;
         end
+    end
     
     assign O_CLK = outputT;
 endmodule
-    
