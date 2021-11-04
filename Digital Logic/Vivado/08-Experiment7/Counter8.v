@@ -3,18 +3,20 @@ module Counter8 (input CLK,
                  output [2:0] oQ,
                  output [6:0] oDisplay);
     wire waste[2:0];
-    JK_FF uut1(CLK,1,1,rst_n,oQ[0],waste[0]);
+    JK_FF uut1(CLK,1'b1,1'b1,rst_n,oQ[0],waste[0]);
     JK_FF uut2(CLK,oQ[0],oQ[0],rst_n,oQ[1],waste[1]);
+    
     wire Q1AndQ2;
     assign Q1AndQ2 = oQ[0] & oQ[1];
     JK_FF uut3(CLK,Q1AndQ2,Q1AndQ2,rst_n,oQ[2],waste[2]);
     
-    wire disData[3:0];
+    wire [3:0] disData;
     assign disData[0] = oQ[0];
     assign disData[1] = oQ[1];
     assign disData[2] = oQ[2];
     assign disData[3] = 0;
-    display7 dis(oQ,oDisplay);
+
+    display7 dis(disData,oDisplay);
     
 endmodule
     
@@ -50,7 +52,7 @@ module JK_FF (input CLK,
     end
     
 endmodule
-    
+ 
 module display7 (
     input [3:0] iData,
     output [6:0] oData
