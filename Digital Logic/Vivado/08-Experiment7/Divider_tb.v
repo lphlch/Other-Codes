@@ -14,7 +14,7 @@ module Divider_tb ();
     
     initial begin
         reset = 0;
-        #500
+        #450
         reset = 1;
     end
 endmodule

@@ -3,12 +3,12 @@ module Divider (input I_CLK,
                 output O_CLK);
     
     parameter i = 20;
-    reg[31:0] counter=0;
+    reg[31:0] counter=1;
     reg outputT=0;
-    always @(posedge I_CLK or posedge rst) begin
+    always @(posedge I_CLK) begin
         if (rst) begin
             counter <= 0;
-            outputT <= 1;
+            outputT <= 0;
         end
         else if (counter < i/2) begin
             counter <= counter + 1;
