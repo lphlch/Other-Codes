@@ -10,7 +10,6 @@ module alu (
 );
     wire[31:0] r_addu,r_add,r_subu,r_sub,r_and,r_or,r_xor,r_nor,r_lui,r_slt,r_sltu,r_sra,r_sll_sla,r_srl;
     wire c_sra,c_sll_sla,c_srl;
-    reg [31:0] r_slt_temp;
     assign r_addu=a+b;
     assign r_add=a+b;
     assign r_subu=a-b;
@@ -21,29 +20,12 @@ module alu (
     assign r_xor=a^b;
     assign r_nor=~(a|b);
     assign r_lui={b[15:0],16'b0};
-    
-    //r_slt
-    always @(*) begin
-        
-        if (a[31]==1 && b[31]==1) begin
-            r_slt_temp=a>b;
-        end
-        else if(a[31]==1 && b[31]==0) begin
-            r_slt_temp=1'b1;
-        end
-        else if(a[31]==0 && b[31]==1) begin
-            r_slt_temp=1'b0;
-        end
-        else if(a[31]==0 && b[31]==0) begin
-            r_slt_temp=a<b;
-        end
 
-    end
-    assign r_slt=r_slt_temp;
-    assign r_sltu=a<b;
+    assign r_sltu=($unsigned(a))<($unsigned(b));
+    assign r_slt=($signed(a))<($signed(b));
     
     assign c_sra=b[a[4:0]-1];
-    assign r_sra=b>>>a[4:0];
+    assign r_sra=$signed(b)>>>a[4:0];
     assign c_sll_sla=b[32-a[4:0]];
     assign r_sll_sla=b<<a[4:0];
     assign c_srl=b[a[4:0]-1];
