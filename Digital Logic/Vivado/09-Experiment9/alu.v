@@ -23,7 +23,7 @@ module alu (
     assign r_lui={b[15:0],16'b0};
     
     //r_slt
-    initial begin
+    always @(*) begin
         
         if (a[31]==1 && b[31]==1) begin
             r_slt_temp=a>b;
@@ -41,7 +41,7 @@ module alu (
     end
     assign r_slt=r_slt_temp;
     assign r_sltu=a<b;
-
+    
     assign c_sra=b[a[4:0]-1];
     assign r_sra=b>>>a;
     assign c_sll_sla=b[32-a[4:0]];
@@ -61,7 +61,7 @@ module alu (
                 r=r_add;
                 zero=r==0;
                 negative=r[31];
-                overflow=r[31];
+                overflow=a[31]==b[31] && r[31]!=a[31];
             end
             4'b0001: begin  //SUBU
                 r=r_subu;
@@ -73,7 +73,7 @@ module alu (
                 r=r_sub;
                 zero=r==0;
                 negative=r[31];
-                overflow=r[31];
+                overflow=a[31]!=b[31] && r[31]!=a[31];
             end
             4'b0100: begin  //AND
                 r=r_and;
@@ -119,25 +119,25 @@ module alu (
             4'b1100: begin  //SRA
                 r=r_sra;
                 zero=r==0;
-                carry=c_sra;
+                carry=a[4:0]==0? 0 : c_sra;
                 negative=r[31];
             end
             4'b1111: begin  //SLL/SLA
                 r=r_sll_sla;
                 zero=r==0;
-                carry=c_sll_sla;
+                carry=a[4:0]==0? 0 : c_sll_sla;
                 negative=r[31];
             end
             4'b1110: begin  //SLL/SLA
                 r=r_sll_sla;
                 zero=r==0;
-                carry=c_sll_sla;
+                carry=a[4:0]==0? 0 : c_sll_sla;
                 negative=r[31];
             end
             4'b1101: begin  //SRL
                 r=r_srl;
                 zero=r==0;
-                carry=c_srl;
+                carry=a[4:0]==0? 0 : c_srl;
                 negative=r[31];
             end
             default: begin
