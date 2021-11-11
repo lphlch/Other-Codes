@@ -61,7 +61,7 @@ module alu (
                 r=r_add;
                 zero=r==0;
                 negative=r[31];
-                overflow=a[31]==b[31] && r[31]!=a[31];
+                overflow=(a[31]==b[31] && r[31]!=a[31]);
             end
             4'b0001: begin  //SUBU
                 r=r_subu;
@@ -73,7 +73,7 @@ module alu (
                 r=r_sub;
                 zero=r==0;
                 negative=r[31];
-                overflow=a[31]!=b[31] && r[31]!=a[31];
+                overflow=(a[31]!=b[31] && r[31]!=a[31]);
             end
             4'b0100: begin  //AND
                 r=r_and;
