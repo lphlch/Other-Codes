@@ -108,7 +108,7 @@ module alu (
             4'b1011: begin  //SLT
                 r=r_slt;
                 zero=a==b;
-                negative=a<b;
+                negative=r_slt;
             end
             4'b1010: begin  //SLTU
                 r=r_sltu;
