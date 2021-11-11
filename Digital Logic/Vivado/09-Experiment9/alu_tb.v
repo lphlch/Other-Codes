@@ -14,6 +14,24 @@ module alu_tb ();
             #10 aluc=aluc+1;
         end
         #10
+        a=32'hffffffff;
+        b=32'h80000000;
+        repeat(16) begin
+            #5 aluc=aluc+1;
+        end
+        #10
+        a=32'h00000008;
+        b=32'hffffffff;
+        repeat(16) begin
+            #5 aluc=aluc+1;
+        end
+        #10
+        a=32'h00000010;
+        b=32'h80000000;
+        repeat(16) begin
+            #5 aluc=aluc+1;
+        end
+        #10
         a=32;   // 0b00000000000000000000000000100000
         b=64;   // 0b00000000000000000000000001000000
         repeat(16) begin
@@ -61,5 +79,6 @@ module alu_tb ();
         repeat(16) begin
             #5 aluc=aluc+1;
         end
+
     end
 endmodule

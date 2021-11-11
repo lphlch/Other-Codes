@@ -43,18 +43,18 @@ module alu (
     assign r_sltu=a<b;
     
     assign c_sra=b[a[4:0]-1];
-    assign r_sra=b>>>a;
+    assign r_sra=b>>>a[4:0];
     assign c_sll_sla=b[32-a[4:0]];
-    assign r_sll_sla=b<<a;
+    assign r_sll_sla=b<<a[4:0];
     assign c_srl=b[a[4:0]-1];
-    assign r_srl=b>>a;
+    assign r_srl=b>>a[4:0];
 
     always @(*) begin
         case (aluc)    
             4'b0000: begin  //ADDU
                 r=r_addu;
                 zero=r==0;
-                carry=r[31];
+                carry=(r_addu<a || r_addu<b);
                 negative=r[31];
             end
             4'b0010: begin  //ADD
@@ -66,7 +66,7 @@ module alu (
             4'b0001: begin  //SUBU
                 r=r_subu;
                 zero=r==0;
-                carry=r[31];
+                carry=a<b;
                 negative=r[31];
             end
             4'b0011: begin  //SUB
