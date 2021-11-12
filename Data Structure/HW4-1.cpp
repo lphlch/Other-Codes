@@ -194,7 +194,7 @@ void UndirectedGraph::create()
 #pragma endregion
 
 #pragma region UNDIRECTED_NETWORK
-//inherit from DirectedGraph
+//inherit from DirectedNetwork
 class UndirectedNetwork :public DirectedNetwork
 {
 public:
