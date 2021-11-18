@@ -29,6 +29,8 @@ module ram_tb();
         #20
         wena = 0; //out addr5 = 80008000
         #20
+        addr=0; //out addr0=ffffffff
+        #20
         ena = 0;  //out z
         #20
         addr = 6; //out z addr = 0
