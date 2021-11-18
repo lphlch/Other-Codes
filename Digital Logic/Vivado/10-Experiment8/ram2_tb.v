@@ -2,15 +2,16 @@
 module ram2_tb();
     reg clk,ena,wena;
     reg [4:0] addr;
+    wire [31:0] data_io;
     reg [31:0] data;
-
-    ram2 uut (clk,ena,wena,addr,data);
+    ram2 uut (clk,ena,wena,addr,data_io);
     
+    assign data_io = wena? data:32'bz;
     initial begin
         ena  = 0;
         wena = 0;
         addr = 0;
-        data  = 0;
+        data = 0;
         #20
         ena  = 1;  //out 0
         wena = 1; //enable write
@@ -18,17 +19,18 @@ module ram2_tb();
         data = 32'hffffffff;   //addr 0 = ffffffff
         #20
         addr = 4;
-        data  = 32'h80008000;   //addr 4  = 80008000
+        data = 32'hff00ff00;   //addr 4 = ff00ff00
         #20
-        wena = 0; //out addr 4 = 80008000
+        wena = 0; //out addr 4 = ff00ff00
         #20
         addr = 5; //out addr 5 = 0
         #20
-        wena = 1; //addr5 = 80008000
+        wena = 1; //addr5 = fff0fff0
+        data = 32'hfff0fff0;
         #20
-        wena = 0; //out addr5 = 80008000
+        wena = 0; //out addr5 = fff0fff0
         #20
-        addr=0; //out addr0=ffffffff
+        addr = 0; //out addr0 = ffffffff
         #20
         ena = 0;  //out z
         #20

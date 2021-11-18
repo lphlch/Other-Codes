@@ -6,7 +6,7 @@ module ram2 (
     inout [31:0] data
 );
     reg [31:0] ram_data [31:0];
-
+    reg [31:0] data_tmp;
     integer i;
     initial begin
         for ( i = 0;i <= 31;i = i+1 )
@@ -21,11 +21,14 @@ module ram2 (
         end        
     end
     always @(*) begin
+        $monitor($time,data,wena,ena,addr,"Data=%h, DataTmp = %h, Ram_data= %h", data,data_tmp,ram_data[addr]);
         if (ena && wena == 0) begin
-            data <= ram_data[addr];
+            data_tmp <= ram_data[addr];
         end
         else if(ena==0) begin
-            data <= 32'bz;
+            data_tmp <= 32'bz;
         end
     end
-endmodule
+
+    assign data = data_tmp;
+endmodule 
