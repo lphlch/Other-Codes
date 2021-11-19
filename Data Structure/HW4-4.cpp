@@ -7,7 +7,8 @@
 #include <algorithm>
 const int INTMAX = 2147483647;
 using namespace std;
-
+vector<int> path;	//save the previous vertex of the way that to the start vertex
+vector<int> shortestPath;	//save the shortest path from the start vertex to the other vertex
 #pragma region DIRECTED_GRAPH
 class DirectedGraph
 {
@@ -19,25 +20,6 @@ protected:
 public:
 	void create();
 };
-
-/// <summary>
-/// create the graph
-/// </summary>
-void DirectedGraph::create()
-{
-	cin >> vertexNum >> edgeNum;
-	matrix.resize(vertexNum);
-	for (int i = 0; i < vertexNum; i++)
-	{
-		matrix[i].resize(vertexNum);
-	}
-	int a, b;
-	for (int i = 0; i < edgeNum; i++)
-	{
-		cin >> a >> b;
-		matrix[a][b] = 1; //set the matrix
-	}
-}
 
 #pragma endregion
 
@@ -54,18 +36,17 @@ public:
 void UndirectedNetwork::create()
 {
 	cin >> vertexNum >> edgeNum >> startVertex;
-	matrix.resize(vertexNum);
-	for (int i = 0; i < vertexNum; i++)
-	{
-		matrix[i].resize(vertexNum);
-	}
+
 	int a, b;
 	int weight;
 	for (int i = 0; i < edgeNum; i++)
 	{
 		cin >> a >> b >> weight;
-		matrix[a - 1][b - 1] = weight; //set the matrix
-		//matrix[b - 1][a - 1] = weight; //symmetric matrix
+		if (matrix[a - 1][b - 1] > weight)
+		{
+			matrix[a - 1][b - 1] = weight; //set the matrix
+			matrix[b - 1][a - 1] = weight; //symmetric matrix
+		}
 	}
 }
 
@@ -76,15 +57,16 @@ void UndirectedNetwork::create()
 /// <param name="shortestPath"></param>
 void UndirectedNetwork::allShortestPath(vector<int>& path, vector<int>& shortestPath)
 {
-	int start = startVertex-1;
+	int start = startVertex - 1;
 	vector<bool> isFindShortestPath(vertexNum, false);
-	shortestPath.resize(vertexNum, 0);
+	shortestPath.resize(vertexNum, INTMAX);
 	path.clear();
-	path.resize(vertexNum,0);
+	path.resize(vertexNum);
+
 	for (int i = 0; i < vertexNum; i++)
 	{
 		shortestPath[i] = matrix[start][i]; //initialize the shortestPath of start
-		if (shortestPath[i] != 0)			//if the start vertex is connected to the i vertex
+		if (shortestPath[i] != INTMAX)			//if the start vertex is connected to the i vertex
 		{
 			path[i] = start; //set the path of start vertex to i vertex
 		}
@@ -93,6 +75,7 @@ void UndirectedNetwork::allShortestPath(vector<int>& path, vector<int>& shortest
 			path[i] = -1; //if the start vertex is not connected to the i vertex
 		}
 	}
+	shortestPath[start] = 0;
 	isFindShortestPath[start] = true;
 
 	for (int i = 1; i < vertexNum; i++)
@@ -112,7 +95,7 @@ void UndirectedNetwork::allShortestPath(vector<int>& path, vector<int>& shortest
 		{
 			//if there is no connection between the last added vertex, making it reachable
 			//if there is a shorter path to a vertex which alrea_dy have way, make it as the shortest
-			if (!isFindShortestPath[j] && matrix[start][j] != 0 && shortestPath[start] + matrix[start][j] < shortestPath[j])
+			if (!isFindShortestPath[j] && matrix[start][j] != INTMAX && shortestPath[start] + matrix[start][j] < shortestPath[j])
 			{
 				shortestPath[j] = shortestPath[start] + matrix[start][j];
 				path[j] = start;	//update the path
@@ -124,14 +107,12 @@ void UndirectedNetwork::allShortestPath(vector<int>& path, vector<int>& shortest
 
 int main()
 {
-	vector<int> path;	//save the previous vertex of the way that to the start vertex
-	vector<int> shortestPath;	//save the shortest path from the start vertex to the other vertex
 	UndirectedNetwork un;
 	un.create();
 	un.allShortestPath(path, shortestPath);
 	for (int i = 0; i < path.size(); i++)
 	{
-		if (un.startVertex != i && path[i] == -1)
+		if (un.startVertex - 1 != i && path[i] == -1)
 		{
 			cout << INTMAX << " ";
 		}
@@ -140,12 +121,12 @@ int main()
 			cout << shortestPath[i] << " ";
 		}
 	}
-	if (1)
+	if (0)
 	{
 		cout << endl;
 		for (int i = 0; i < path.size(); i++)
 		{
-			cout << path[i]+1 << ' ';
+			cout << path[i] + 1 << ' ';
 		}
 	}
 	return 0;
