@@ -49,21 +49,24 @@ void UndirectedNetwork::create()
 	table.resize(vertexNum);
 	int a, b;
 	int weight;
-	int tmpEdgeIndex;
+	int tmpEdgeIndexA;
+	int tmpEdgeIndexB;
 	for (int i = 0; i < edgeNum; i++)
 	{
 		cin >> a >> b >> weight;
 		int indexA = a - 1;
 		int indexB = b - 1;
-		tmpEdgeIndex = findEdge(table, indexA, indexB);
-		if (tmpEdgeIndex == -1)
+		tmpEdgeIndexA = findEdge(table, indexA, indexB);
+		if (tmpEdgeIndexA == -1)
 		{
 			table[indexA].push_back({ indexB, weight });
-			//table[indexB].push_back({ indexA, weight });
+			table[indexB].push_back({ indexA, weight });
 		}
-		else if (table[indexA][tmpEdgeIndex].weight > weight)
+		else if (table[indexA][tmpEdgeIndexA].weight > weight)
 		{
-			table[indexA][tmpEdgeIndex].weight = weight;
+			table[indexA][tmpEdgeIndexA].weight = weight;
+			tmpEdgeIndexB = findEdge(table, indexB, indexA);
+			table[indexB][tmpEdgeIndexB].weight = weight;
 		}
 	}
 }
