@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+const int INTMAX = 2147483647;
 using namespace std;
 
 #pragma region DIRECTED_GRAPH
@@ -46,14 +47,13 @@ class UndirectedNetwork : public DirectedGraph
 {
 public:
 	void create();
-	void allShortestPath(vector <int> & path, vector <int> & shortestPath);
+	void allShortestPath(vector<int>& path, vector<int>& shortestPath);
 	int startVertex;
 };
 
 void UndirectedNetwork::create()
 {
 	cin >> vertexNum >> edgeNum >> startVertex;
-	startVertex--;
 	matrix.resize(vertexNum);
 	for (int i = 0; i < vertexNum; i++)
 	{
@@ -65,7 +65,7 @@ void UndirectedNetwork::create()
 	{
 		cin >> a >> b >> weight;
 		matrix[a - 1][b - 1] = weight; //set the matrix
-		matrix[b - 1][a - 1] = weight; //symmetric matrix
+		//matrix[b - 1][a - 1] = weight; //symmetric matrix
 	}
 }
 
@@ -74,13 +74,13 @@ void UndirectedNetwork::create()
 /// </summary>
 /// <param name="path"></param>
 /// <param name="shortestPath"></param>
-void UndirectedNetwork::allShortestPath(vector <int> & path, vector <int> & shortestPath)
+void UndirectedNetwork::allShortestPath(vector<int>& path, vector<int>& shortestPath)
 {
-	int start = startVertex;
+	int start = startVertex-1;
 	vector<bool> isFindShortestPath(vertexNum, false);
 	shortestPath.resize(vertexNum, 0);
 	path.clear();
-	path.resize(vertexNum);
+	path.resize(vertexNum,0);
 	for (int i = 0; i < vertexNum; i++)
 	{
 		shortestPath[i] = matrix[start][i]; //initialize the shortestPath of start
@@ -97,7 +97,7 @@ void UndirectedNetwork::allShortestPath(vector <int> & path, vector <int> & shor
 
 	for (int i = 1; i < vertexNum; i++)
 	{
-		int minPath = INT_MAX;
+		int minPath = INTMAX;
 		for (int j = 0; j < vertexNum; j++) //get the minPath, record the vertex
 		{
 			if (!isFindShortestPath[j] && shortestPath[j] < minPath)
@@ -129,18 +129,24 @@ int main()
 	UndirectedNetwork un;
 	un.create();
 	un.allShortestPath(path, shortestPath);
-
 	for (int i = 0; i < path.size(); i++)
 	{
 		if (un.startVertex != i && path[i] == -1)
 		{
-			cout << INT_MAX << " ";
+			cout << INTMAX << " ";
 		}
 		else
 		{
 			cout << shortestPath[i] << " ";
 		}
 	}
-
+	if (1)
+	{
+		cout << endl;
+		for (int i = 0; i < path.size(); i++)
+		{
+			cout << path[i]+1 << ' ';
+		}
+	}
 	return 0;
 }
