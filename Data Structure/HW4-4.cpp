@@ -45,6 +45,9 @@ public:
 	void allShortestPath(vector<int>& path, vector<int>& shortestPath);
 };
 
+/// <summary>
+/// create undirected network, and store in table
+/// </summary>
 void UndirectedNetwork::create()
 {
 	cin >> vertexNum >> edgeNum >> startVertex;
@@ -74,10 +77,10 @@ void UndirectedNetwork::create()
 }
 
 /// <summary>
-/// Get all shortest path by Dijkstra algorithm
+/// Get all shortest path by Dijkstra algorithm, priority queue boosted
 /// </summary>
-/// <param name="path"></param>
-/// <param name="shortestPath"></param>
+/// <param name="path"> path of shortest way </param>
+/// <param name="shortestPath"> distance of path </param>
 void UndirectedNetwork::allShortestPath(vector<int>& path, vector<int>& shortestPath)
 {
 	int start = startVertex - 1;
@@ -89,14 +92,6 @@ void UndirectedNetwork::allShortestPath(vector<int>& path, vector<int>& shortest
 	for (int i = 0; i < vertexNum; i++)
 	{
 		tmpEdgeIndex = findEdge(table, start, i);
-		//if (tmpEdgeIndex == -1) //initialize the shortestPath of start
-		//{
-		//	shortestPath[i] = INTMAX;
-		//}
-		//else
-		//{
-		//	shortestPath[i] = table[start][tmpEdgeIndex].weight;
-		//}
 
 		if (shortestPath[i] != INTMAX) //if the start vertex is connected to the i vertex
 		{
@@ -114,7 +109,7 @@ void UndirectedNetwork::allShortestPath(vector<int>& path, vector<int>& shortest
 	tmpTime = clock();
 	while (!pQ.empty())
 	{
-		int tmpVertex = pQ.top().second;
+		int tmpVertex = pQ.top().second;	//get the vertex with the smallest distance
 		pQ.pop();
 		if (isFindShortestPath[tmpVertex])	//if the tmpVertex has been found
 		{
@@ -126,41 +121,13 @@ void UndirectedNetwork::allShortestPath(vector<int>& path, vector<int>& shortest
 		for (int i = 0; i < table[tmpVertex].size(); i++)
 		{
 			int j = table[tmpVertex][i].vertexId;
-			if (!isFindShortestPath[j] && shortestPath[tmpVertex] + table[tmpVertex][i].weight < shortestPath[j])
+			if (!isFindShortestPath[j] && shortestPath[tmpVertex] + table[tmpVertex][i].weight < shortestPath[j])	//update the shortest path
 			{
 				shortestPath[j] = shortestPath[tmpVertex] + table[tmpVertex][i].weight;
 				path[j] = tmpVertex; //update the path
 				pQ.push({ -shortestPath[j], j });
 			}
 		}
-
-		//for (int i = 1; i < vertexNum; i++)
-		//{
-		//	tmpTime = clock();
-		//	int minPath = INTMAX;
-		//	for (int j = 0; j < vertexNum; j++) //get the minPath, record the vertex
-		//	{
-		//		if (!isFindShortestPath[j] && shortestPath[j] < minPath)
-		//		{
-		//			minPath = shortestPath[j];
-		//			start = j;
-		//		}
-		//	}
-		//	isFindShortestPath[start] = true;
-		//	searchMinTime += clock() - tmpTime;
-
-		//	tmpTime = clock();
-		//	for (int k = 0; k < table[start].size(); k++)
-		//	{
-		//		int j = table[start][k].vertexId;
-		//		if (!isFindShortestPath[j] && shortestPath[start] + table[start][k].weight < shortestPath[j])
-		//		{
-		//			shortestPath[j] = shortestPath[start] + table[start][k].weight;
-		//			path[j] = start; //update the path
-		//		}
-		//	}
-		//	updateTime += clock() - tmpTime;
-		//}
 	}
 	updateTime += clock() - tmpTime;
 	//cerr << "Search time: " << searchMinTime << "ms" << endl;
