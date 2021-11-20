@@ -6,6 +6,8 @@
 #include <vector>
 #include <algorithm>
 #include <time.h>
+#include <queue>
+
 const int INTMAX = 2147483647;
 using namespace std;
 
@@ -87,14 +89,14 @@ void UndirectedNetwork::allShortestPath(vector<int>& path, vector<int>& shortest
 	for (int i = 0; i < vertexNum; i++)
 	{
 		tmpEdgeIndex = findEdge(table, start, i);
-		if (tmpEdgeIndex == -1) //initialize the shortestPath of start
-		{
-			shortestPath[i] = INTMAX;
-		}
-		else
-		{
-			shortestPath[i] = table[start][tmpEdgeIndex].weight;
-		}
+		//if (tmpEdgeIndex == -1) //initialize the shortestPath of start
+		//{
+		//	shortestPath[i] = INTMAX;
+		//}
+		//else
+		//{
+		//	shortestPath[i] = table[start][tmpEdgeIndex].weight;
+		//}
 
 		if (shortestPath[i] != INTMAX) //if the start vertex is connected to the i vertex
 		{
@@ -106,48 +108,62 @@ void UndirectedNetwork::allShortestPath(vector<int>& path, vector<int>& shortest
 		}
 	}
 	shortestPath[start] = 0;
-	isFindShortestPath[start] = true;
 
-	for (int i = 1; i < vertexNum; i++)
+	priority_queue<pair<int, int>> pQ;
+	pQ.push({INTMAX, start });
+	tmpTime = clock();
+	while (!pQ.empty())
 	{
-		tmpTime = clock();
-		int minPath = INTMAX;
-		for (int j = 0; j < vertexNum; j++) //get the minPath, record the vertex
+		int tmpVertex = pQ.top().second;
+		pQ.pop();
+		if (isFindShortestPath[tmpVertex])	//if the tmpVertex has been found
 		{
-			if (!isFindShortestPath[j] && shortestPath[j] < minPath)
+			continue;
+		}
+		isFindShortestPath[tmpVertex] = true;
+
+
+		for (int i = 0; i < table[tmpVertex].size(); i++)
+		{
+			int j = table[tmpVertex][i].vertexId;
+			if (!isFindShortestPath[j] && shortestPath[tmpVertex] + table[tmpVertex][i].weight < shortestPath[j])
 			{
-				minPath = shortestPath[j];
-				start = j;
+				shortestPath[j] = shortestPath[tmpVertex] + table[tmpVertex][i].weight;
+				path[j] = tmpVertex; //update the path
+				pQ.push({ -shortestPath[j], j });
 			}
 		}
-		isFindShortestPath[start] = true;
-		searchMinTime += clock() - tmpTime;
 
-		tmpTime = clock();
-		//for (int j = 0; j < vertexNum; j++) //update the shortest path
+		//for (int i = 1; i < vertexNum; i++)
 		//{
-		//	//if there is no connection between the last added vertex, making it reachable
-		//	//if there is a shorter path to a vertex which alrea_dy have way, make it as the shortest
-		//	//if (!isFindShortestPath[j] && table[start].find(j) != table[start].end() && shortestPath[start] + table[start].find(j)->second < shortestPath[j])
-		//	//{
-		//	//	shortestPath[j] = shortestPath[start] + table[start].find(j)->second;
-		//	//	path[j] = start; //update the path
-		//	//}
-		//
-		//}
-		for (int k = 0; k < table[start].size(); k++)
-		{
-			int j = table[start][k].vertexId;
-			if (!isFindShortestPath[j] && shortestPath[start] + table[start][k].weight < shortestPath[j])
-			{
-				shortestPath[j] = shortestPath[start] + table[start][k].weight;
-				path[j] = start; //update the path
-			}
-		}
+		//	tmpTime = clock();
+		//	int minPath = INTMAX;
+		//	for (int j = 0; j < vertexNum; j++) //get the minPath, record the vertex
+		//	{
+		//		if (!isFindShortestPath[j] && shortestPath[j] < minPath)
+		//		{
+		//			minPath = shortestPath[j];
+		//			start = j;
+		//		}
+		//	}
+		//	isFindShortestPath[start] = true;
+		//	searchMinTime += clock() - tmpTime;
 
-		updateTime += clock() - tmpTime;
+		//	tmpTime = clock();
+		//	for (int k = 0; k < table[start].size(); k++)
+		//	{
+		//		int j = table[start][k].vertexId;
+		//		if (!isFindShortestPath[j] && shortestPath[start] + table[start][k].weight < shortestPath[j])
+		//		{
+		//			shortestPath[j] = shortestPath[start] + table[start][k].weight;
+		//			path[j] = start; //update the path
+		//		}
+		//	}
+		//	updateTime += clock() - tmpTime;
+		//}
 	}
-	cerr << "Search time: " << searchMinTime << "ms" << endl;
+	updateTime += clock() - tmpTime;
+	//cerr << "Search time: " << searchMinTime << "ms" << endl;
 	cerr << "Update time: " << updateTime << "ms" << endl;
 }
 
