@@ -12,6 +12,23 @@ module ram2_tb();
         wena = 0;
         addr = 0;
         data = 0;
+
+        #20
+        addr = 1;
+        data = 1;
+        ena  = 1;
+        wena = 1;
+        #20
+        wena = 0;
+
+        #20
+        addr = 2;
+        data = 2;
+        wena = 1;
+        #20
+        wena = 0;
+        
+        
         #20
         ena  = 1;  //out 0
         wena = 1; //enable write
@@ -33,10 +50,10 @@ module ram2_tb();
         #20
         addr = 0; //out addr0 = ffffffff
         #20
-        addr=5;
+        addr = 5;
         #20
         wena = 1; //addr5 = fff0fff0
-        data=32'hfff0fff0;
+        data = 32'hfff0fff0;
         #20
         ena = 0;  //out z
         #20
@@ -50,4 +67,17 @@ module ram2_tb();
         end
     end
     
+endmodule
+
+module inout_top
+(
+input       I_data_in,
+inout       IO_data,
+output     O_data_out,
+input       Control
+);
+
+assign IO_data = Control ? I_data_in : 1'bz ;
+assign O_data_out = IO_data ;
+
 endmodule
