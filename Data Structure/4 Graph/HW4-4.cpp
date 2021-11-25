@@ -12,11 +12,17 @@ time_t start = 0;
 time_t tmp = clock();
 time_t singleLevel = 0;
 const int MAX_LEVEL = 6;
-const int INTMAX = 2147483647;
+const int INTMAX=2147483647;
+struct Edge
+{
+	int vertexId;
+	int distance;
+};
+
 
 class UndirectedGraph
 {
-private:
+protected:
 	vector<vector<int>> table; //save the graph table
 	int vertexNum;
 	int edgeNum;
@@ -40,16 +46,12 @@ void UndirectedGraph::create()
 	for (int i = 0; i < edgeNum; i++)
 	{
 		cin >> indexA >> indexB;
-		table[indexA - 1].push_back(indexB - 1);
-		table[indexB - 1].push_back(indexA - 1);
+		table[indexA-1].push_back(indexB-1);
+		table[indexB-1].push_back(indexA-1);
 	}
 }
 
-/// <summary>
-/// count the path not more than MAXLEVEL from start to every vertex, by dijkstra algorithm
-/// </summary>
-/// <param name="start"> vertex </param>
-/// <returns> numbers of vertexs which is shorter than MAXLEVEL </returns>
+
 int UndirectedGraph::countPath(int start)
 {
 
@@ -60,12 +62,12 @@ int UndirectedGraph::countPath(int start)
 	shortestPath[start] = 0;
 
 	priority_queue<pair<int, int>> pQ;	//first is the distance, second is the vertex
-	pQ.push({ INTMAX, start });
+	pQ.push({INTMAX, start });
 
 	int count = 0;
 	while (!pQ.empty())
 	{
-		if (-pQ.top().first > MAX_LEVEL)
+		if(-pQ.top().first > MAX_LEVEL)
 		{
 			break;
 		}
@@ -93,9 +95,6 @@ int UndirectedGraph::countPath(int start)
 	return count;
 }
 
-/// <summary>
-/// calculate and print the result
-/// </summary>
 void UndirectedGraph::printSmallWorld()
 {
 	start = clock();
@@ -103,10 +102,10 @@ void UndirectedGraph::printSmallWorld()
 
 	for (int i = 0; i < vertexNum; i++)
 	{
-		int count = countPath(i);
+		int count=countPath(i);
 		cout << i + 1 << ':' << ' ' << std::fixed << std::setprecision(2) << float(count * 100.0 / vertexNum + 0.004) << '%' << std::endl;
 	}
-	start = clock() - start;
+		start = clock() - start;
 	cerr << "time: " << start << endl;
 }
 
