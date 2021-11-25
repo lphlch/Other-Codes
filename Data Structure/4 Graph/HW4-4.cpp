@@ -1,77 +1,114 @@
-//@date: 2021/11/24
+//@date: 2021/11/18
 //@author: LPH
-//@description: HW4-5 Small world
+//@description: HW4-4 The shortest path
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <time.h>
 #include <queue>
-#include <iomanip>
 
+const int INTMAX = 2147483647;
 using namespace std;
-time_t start = 0;
-time_t tmp = clock();
-time_t singleLevel = 0;
-const int MAX_LEVEL = 6;
-const int INTMAX=2147483647;
+
 struct Edge
 {
 	int vertexId;
-	int distance;
+	int weight;
 };
 
-
-class UndirectedGraph
+int findEdge(vector<vector<Edge>>& table, int start, int end)
 {
-protected:
-	vector<vector<int>> table; //save the graph table
+	for (int i = 0; i < table[start].size(); i++)
+	{
+		if (table[start][i].vertexId == end)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+time_t searchMinTime = 0;
+time_t updateTime = 0;
+time_t createTime = 0;
+time_t tmpTime;
+
+class UndirectedNetwork
+{
+public:
+	vector<vector<Edge>> table;
 	int vertexNum;
 	int edgeNum;
-
-public:
+	int startVertex;
 	void create();
-	void printTable();
-	void printSmallWorld();
-	int countPath(int start);
+	void allShortestPath(vector<int>& path, vector<int>& shortestPath);
 };
 
 /// <summary>
-/// create the graph
+/// create undirected network, and store in table
 /// </summary>
-void UndirectedGraph::create()
+void UndirectedNetwork::create()
 {
-	cin >> vertexNum >> edgeNum;
+	cin >> vertexNum >> edgeNum >> startVertex;
 	table.resize(vertexNum);
-
-	int indexA, indexB;
+	int a, b;
+	int weight;
+	int tmpEdgeIndexA;
+	int tmpEdgeIndexB;
 	for (int i = 0; i < edgeNum; i++)
 	{
-		cin >> indexA >> indexB;
-		table[indexA-1].push_back(indexB-1);
-		table[indexB-1].push_back(indexA-1);
+		cin >> a >> b >> weight;
+		int indexA = a - 1;
+		int indexB = b - 1;
+		tmpEdgeIndexA = findEdge(table, indexA, indexB);
+		if (tmpEdgeIndexA == -1)
+		{
+			table[indexA].push_back({ indexB, weight });
+			table[indexB].push_back({ indexA, weight });
+		}
+		else if (table[indexA][tmpEdgeIndexA].weight > weight)
+		{
+			table[indexA][tmpEdgeIndexA].weight = weight;
+			tmpEdgeIndexB = findEdge(table, indexB, indexA);
+			table[indexB][tmpEdgeIndexB].weight = weight;
+		}
 	}
 }
 
-
-int UndirectedGraph::countPath(int start)
+/// <summary>
+/// Get all shortest path by Dijkstra algorithm, priority queue boosted
+/// </summary>
+/// <param name="path"> path of shortest way </param>
+/// <param name="shortestPath"> distance of path </param>
+void UndirectedNetwork::allShortestPath(vector<int>& path, vector<int>& shortestPath)
 {
-
+	int start = startVertex - 1;
 	vector<bool> isFindShortestPath(vertexNum, false);
-	vector<int> shortestPath(vertexNum, INTMAX);
-
+	shortestPath.resize(vertexNum, INTMAX);
+	path.clear();
+	path.resize(vertexNum);
 	int tmpEdgeIndex = -1;
+	for (int i = 0; i < vertexNum; i++)
+	{
+		tmpEdgeIndex = findEdge(table, start, i);
+
+		if (shortestPath[i] != INTMAX) //if the start vertex is connected to the i vertex
+		{
+			path[i] = start; //set the path of start vertex to i vertex
+		}
+		else
+		{
+			path[i] = -1; //if the start vertex is not connected to the i vertex
+		}
+	}
 	shortestPath[start] = 0;
 
-	priority_queue<pair<int, int>> pQ;	//first is the distance, second is the vertex
+	priority_queue<pair<int, int>> pQ;
 	pQ.push({INTMAX, start });
-
-	int count = 0;
+	tmpTime = clock();
 	while (!pQ.empty())
 	{
-		if(-pQ.top().first > MAX_LEVEL)
-		{
-			break;
-		}
-		count++;
 		int tmpVertex = pQ.top().second;	//get the vertex with the smallest distance
 		pQ.pop();
 		if (isFindShortestPath[tmpVertex])	//if the tmpVertex has been found
@@ -83,40 +120,47 @@ int UndirectedGraph::countPath(int start)
 
 		for (int i = 0; i < table[tmpVertex].size(); i++)
 		{
-			int j = table[tmpVertex][i];
-			if (!isFindShortestPath[j] && shortestPath[tmpVertex] + 1 < shortestPath[j])	//update the shortest path
+			int j = table[tmpVertex][i].vertexId;
+			if (!isFindShortestPath[j] && shortestPath[tmpVertex] + table[tmpVertex][i].weight < shortestPath[j])	//update the shortest path
 			{
-				shortestPath[j] = shortestPath[tmpVertex] + 1;
-
+				shortestPath[j] = shortestPath[tmpVertex] + table[tmpVertex][i].weight;
+				path[j] = tmpVertex; //update the path
 				pQ.push({ -shortestPath[j], j });
 			}
 		}
 	}
-	return count;
+	updateTime += clock() - tmpTime;
+	//cerr << "Search time: " << searchMinTime << "ms" << endl;
+	cerr << "Update time: " << updateTime << "ms" << endl;
 }
-
-void UndirectedGraph::printSmallWorld()
-{
-	start = clock();
-
-
-	for (int i = 0; i < vertexNum; i++)
-	{
-		int count=countPath(i);
-		cout << i + 1 << ':' << ' ' << std::fixed << std::setprecision(2) << float(count * 100.0 / vertexNum + 0.004) << '%' << std::endl;
-	}
-		start = clock() - start;
-	cerr << "time: " << start << endl;
-}
-
-#pragma endregion
 
 int main()
 {
-	UndirectedGraph ug;
-	ug.create();
-
-	ug.printSmallWorld();
-
+	vector<int> path;		  //save the previous vertex of the way that to the start vertex
+	vector<int> shortestPath; //save the shortest path from the start vertex to the other vertex
+	UndirectedNetwork un;
+	createTime = clock();
+	un.create();
+	cerr << "Create time: " << clock() - createTime << "ms" << endl;
+	un.allShortestPath(path, shortestPath);
+	for (int i = 0; i < path.size(); i++)
+	{
+		if (un.startVertex - 1 != i && path[i] == -1)
+		{
+			cout << INTMAX << " ";
+		}
+		else
+		{
+			cout << shortestPath[i] << " ";
+		}
+	}
+	if (0)
+	{
+		cout << endl;
+		for (int i = 0; i < path.size(); i++)
+		{
+			cout << path[i] + 1 << ' ';
+		}
+	}
 	return 0;
 }
