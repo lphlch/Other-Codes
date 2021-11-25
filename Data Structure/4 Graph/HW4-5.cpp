@@ -8,23 +8,24 @@
 #include <iomanip>
 
 using namespace std;
-
+time_t start = 0;
+time_t tmp = clock();
+time_t singleLevel = 0;
 const int MAX_LEVEL = 6;
-#pragma region DIRECTED_GRAPH
+const int INTMAX = 2147483647;
+
 class UndirectedGraph
 {
-protected:
-	vector<vector<int>> matrix; //save the graph matrix
-	vector<char> vertex;		//save the vertex
+private:
+	vector<vector<int>> table; //save the graph table
 	int vertexNum;
 	int edgeNum;
 
 public:
 	void create();
-	void printMatrix();
 	void printTable();
 	void printSmallWorld();
-	int bfs(int start);
+	int countPath(int start);
 };
 
 /// <summary>
@@ -33,101 +34,80 @@ public:
 void UndirectedGraph::create()
 {
 	cin >> vertexNum >> edgeNum;
-	matrix.resize(vertexNum);
-	for (int i = 0; i < vertexNum; i++)
-	{
-		matrix[i].resize(vertexNum);
-	}
+	table.resize(vertexNum);
+
 	int indexA, indexB;
 	for (int i = 0; i < edgeNum; i++)
 	{
 		cin >> indexA >> indexB;
-		matrix[indexA - 1][indexB - 1] = 1; //set the matrix
-		matrix[indexB - 1][indexA - 1] = 1;
+		table[indexA - 1].push_back(indexB - 1);
+		table[indexB - 1].push_back(indexA - 1);
 	}
 }
 
 /// <summary>
-/// print the matrix
+/// count the path not more than MAXLEVEL from start to every vertex, by dijkstra algorithm
 /// </summary>
-void UndirectedGraph::printMatrix()
+/// <param name="start"> vertex </param>
+/// <returns> numbers of vertexs which is shorter than MAXLEVEL </returns>
+int UndirectedGraph::countPath(int start)
 {
-	for (int i = 0; i < vertexNum; i++)
-	{
-		cout << vertex[i] << " ";
-	}
-	cout << endl;
-	for (int i = 0; i < vertexNum; i++)
-	{
-		for (int j = 0; j < vertexNum; j++)
-		{
-			//width 4 for each element
-			cout << matrix[i][j];
-		}
-		cout << endl;
-	}
-}
 
-/// <summary>
-/// print the table
-/// </summary>
-void UndirectedGraph::printTable()
-{
-	for (int i = 0; i < vertexNum; i++)
-	{
-		cout << vertex[i] << "-->";
-		for (int j = vertexNum - 1; j >= 0; j--)
-		{
-			if (matrix[i][j] != 0)
-				cout << j << " ";
-		}
-		cout << endl;
-	}
-}
+	vector<bool> isFindShortestPath(vertexNum, false);
+	vector<int> shortestPath(vertexNum, INTMAX);
 
-int UndirectedGraph::bfs(int start)
-{
-	vector<bool> visited(vertexNum, false);
-	queue<pair<int, int>> q; // first is the vertex, second is the level
-	q.push({start, 0});
-	visited[start] = true;
+	int tmpEdgeIndex = -1;
+	shortestPath[start] = 0;
+
+	priority_queue<pair<int, int>> pQ;	//first is the distance, second is the vertex
+	pQ.push({ INTMAX, start });
+
 	int count = 0;
-	int level = 0;
-	while (!q.empty())
+	while (!pQ.empty())
 	{
-		int temp = q.front().first;
-		level = q.front().second;
-		if (level > MAX_LEVEL)
+		if (-pQ.top().first > MAX_LEVEL)
 		{
 			break;
 		}
-		q.pop();
-		for (int i = 0; i < vertexNum; i++)
+		count++;
+		int tmpVertex = pQ.top().second;	//get the vertex with the smallest distance
+		pQ.pop();
+		if (isFindShortestPath[tmpVertex])	//if the tmpVertex has been found
 		{
-			if (matrix[temp][i] != 0 && !visited[i])
+			continue;
+		}
+		isFindShortestPath[tmpVertex] = true;
+
+
+		for (int i = 0; i < table[tmpVertex].size(); i++)
+		{
+			int j = table[tmpVertex][i];
+			if (!isFindShortestPath[j] && shortestPath[tmpVertex] + 1 < shortestPath[j])	//update the shortest path
 			{
-				q.push({i, level + 1});
-				visited[i] = true;
+				shortestPath[j] = shortestPath[tmpVertex] + 1;
+
+				pQ.push({ -shortestPath[j], j });
 			}
 		}
-		count++;
 	}
 	return count;
 }
 
+/// <summary>
+/// calculate and print the result
+/// </summary>
 void UndirectedGraph::printSmallWorld()
 {
-	time_t start = 0;
-	time_t tmp = clock();
+	start = clock();
+
+
 	for (int i = 0; i < vertexNum; i++)
 	{
-		printf("%d: %.2f%%\n", i + 1, (float)bfs(i) / (float)vertexNum * (float)100);
-		if (i % 10 == 0)
-		{
-			start = clock() - start;
-			cerr << "timeEvery10: " << start << endl;
-		}
+		int count = countPath(i);
+		cout << i + 1 << ':' << ' ' << std::fixed << std::setprecision(2) << float(count * 100.0 / vertexNum + 0.004) << '%' << std::endl;
 	}
+	start = clock() - start;
+	cerr << "time: " << start << endl;
 }
 
 #pragma endregion
@@ -136,6 +116,7 @@ int main()
 {
 	UndirectedGraph ug;
 	ug.create();
+
 	ug.printSmallWorld();
 
 	return 0;
