@@ -17,8 +17,8 @@ private:
 	vector<vector<int>> matrix; //save the graph table
 	int vertexNum;
 	int edgeNum;
-	vector<vector<bool>> visited;
-	vector<pair<int, int>> path;
+	vector<vector<bool>> visited;   //save the visited status
+	vector<pair<int, int>> path;    //save the path
 
 public:
 	void create();
@@ -28,7 +28,7 @@ public:
 };
 
 /// <summary>
-/// create the graph
+/// create the graph, time complexity is O(M)
 /// </summary>
 void UndirectedGraph::create()
 {
@@ -64,7 +64,7 @@ void UndirectedGraph::create()
 }
 
 /// <summary>
-/// print the matrix
+/// print the matrix, time complexity is O(N^2)
 /// </summary>
 void UndirectedGraph::printMatrix()
 {
@@ -86,7 +86,7 @@ void UndirectedGraph::printMatrix()
 }
 
 /// <summary>
-/// dfs search all the pathes
+/// dfs search all the pathes, time complexity of single function is O(N), time complexity of all function is O(N^M)
 /// </summary>
 /// <param name="steps"> current edges passed </param>
 /// <param name="start"> start vertex </param>
@@ -139,7 +139,7 @@ void UndirectedGraph::printVisited()
 }
 
 /// <summary>
-/// print all path
+/// print all path, time complexity is O(2^M)(The worst case is 2 vertexs)
 /// </summary>
 void printAllSingleDrawing()
 {
@@ -154,6 +154,7 @@ void printAllSingleDrawing()
 		cout << endl;
 	}
 }
+
 int main()
 {
 	UndirectedGraph ug;
