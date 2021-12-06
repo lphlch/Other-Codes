@@ -49,7 +49,12 @@ module VGA_color_line (CLK,
             if (hcnt < H_TOTAL - 1'b1)  //判断扫描完一行
                 hcnt <= hcnt + 1'b1;
             else
-                hcnt <= 0;
+                begin
+                    if (hcnt < H_TOTAL - 1'b1)  //判断扫描完一行,像素区间为[0, H_TOTAL - 1'b1]
+                        hcnt <= hcnt + 1'b1;
+                    else
+                        hcnt <= 0;
+                end
         end
     end
     //行同步
@@ -63,7 +68,13 @@ module VGA_color_line (CLK,
             if (hcnt >= (H_DISP + H_FRONT - 1'b1) && hcnt < (H_DISP + H_FRONT + H_SYNC - 1'b1))
                 VGA_HSYNC <= 1;
             else
-                VGA_HSYNC <= 0;
+                begin
+                //像素(H_DISP + H_FRONT - 1, H_DISP + H_FRONT + H_SYNC - 1]区间同步
+                    if (hcnt >= (H_DISP + H_FRONT - 1'b1) && hcnt < (H_DISP + H_FRONT + H_SYNC - 1'b1))
+                        hs_vga <= 1;  //在同步区置1，行同步
+                    else
+                        hs_vga <= 0;
+                end
         end
     end
     
@@ -83,8 +94,6 @@ module VGA_color_line (CLK,
                 else
                     vcnt <= 0;
             end
-            else
-                vcnt <= vcnt;
         end
     end
     //场同步
@@ -93,11 +102,12 @@ module VGA_color_line (CLK,
         if (!RST_N)
             VGA_VSYNC <= 0;
         else
-        begin
-            if (vcnt >= (V_DISP + V_FRONT - 1'b1) && vcnt < (V_DISP + V_FRONT + V_SYNC - 1'b1))
-                VGA_VSYNC <= 1;
-            else
-                VGA_VSYNC <= 0;
+                begin
+                    if (vcnt >= (V_DISP + V_FRONT - 1'b1) && vcnt < (V_DISP + V_FRONT + V_SYNC - 1'b1))
+                        vs_vga <= 1;
+                    else
+                        vs_vga <= 0;
+                end
         end
     end
     
