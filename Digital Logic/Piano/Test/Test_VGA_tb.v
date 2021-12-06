@@ -1,4 +1,4 @@
-`timescale 10 ns/ 1 ps
+`timescale 1 ns/ 1 ps
 module VGA_color_line_vlg_tst();
     reg clk;
     reg rst_n;
