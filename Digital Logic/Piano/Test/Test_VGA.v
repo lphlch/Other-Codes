@@ -33,17 +33,17 @@ module VGA_color_line (CLK,
     
     //调用IP核，分频108 MHZ
     clk_wiz_0 clk_vga_inst(
-    .clk_in1(clk),
-    .resetn(rst_n),
+    .clk_in1(CLK),
+    .resetn(RST_N),
     .clk_out1(clk_vga)
     );
 
     //行同步计数器
     reg [10:0] hcnt;
     reg VGA_HSYNC;
-    always @ (posedge clk_vga or negedge rst_n)
+    always @ (posedge clk_vga or negedge RST_N)
     begin
-        if (!rst_n)
+        if (!RST_N)
             hcnt <= 0;  //复位后计数清0
         else
         begin
@@ -54,9 +54,9 @@ module VGA_color_line (CLK,
         end
     end
     //行同步
-    always @ (posedge clk_vga or negedge rst_n)
+    always @ (posedge clk_vga or negedge RST_N)
     begin
-        if (!rst_n)
+        if (!RST_N)
             VGA_HSYNC <= 0; //因为复位后计数器置零，而0 ~ (H_DISP - 1)区间为显示区，此处必为 0
         else
         begin
@@ -71,9 +71,9 @@ module VGA_color_line (CLK,
     //场同步计数器
     reg [10:0] vcnt;
     reg VGA_VSYNC;
-    always @ (posedge clk_vga or negedge rst_n)  //异步复位
+    always @ (posedge clk_vga or negedge RST_N)  //异步复位
     begin
-        if (!rst_n)
+        if (!RST_N)
             vcnt <= 0;  //复位后计数清0
         else
         begin
@@ -89,9 +89,9 @@ module VGA_color_line (CLK,
         end
     end
     //场同步
-    always @ (posedge clk_vga or negedge rst_n)
+    always @ (posedge clk_vga or negedge RST_N)
     begin
-        if (!rst_n)
+        if (!RST_N)
             VGA_VSYNC <= 0;
         else
         begin
@@ -108,9 +108,9 @@ module VGA_color_line (CLK,
     assign ypos_vga = (vcnt < V_DISP) ? (vcnt + 1'b1) : 11'd0;  //在显示区竖坐标 + 1（即1~V_DISP）
     
     //竖彩条显示
-    always @ (posedge clk_vga or negedge rst_n)
+    always @ (posedge clk_vga or negedge RST_N)
     begin
-        if (!rst_n)
+        if (!RST_N)
             rgb_vga <= 3'b000;
         else
         begin
