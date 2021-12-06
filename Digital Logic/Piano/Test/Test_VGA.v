@@ -8,12 +8,12 @@ module VGA_color_line (CLK,
                        VGA_BLUE);
     
     input CLK, RST_N;  //系统时钟和低电平复位
-    input [8:0]RGB;         //RGB输入
+    input [11:0]RGB;         //RGB输入
     output VGA_HSYNC, VGA_VSYNC;  //行同步VGA_HSYNC，场同步VGA_VSYNC
     output [3:0] VGA_RED;
     output [3:0] VGA_GREEN;
     output [3:0] VGA_BLUE;  //像素三基色输出R、G、B
-    reg [8:0] rgb_vga;  //三位一组，分别为R、G、B
+    reg [11:0] rgb_vga;  //4位一组，分别为R、G、B
     wire clk_vga;  //像素时钟 1688 * 1066 * 108 MZ 
     
     // Horizontal Parameter(Pixel)
@@ -144,8 +144,8 @@ module VGA_color_line (CLK,
         end
     end
     //三基色分离
-    assign VGA_RED   = rgb_vga[8:6];
-    assign VGA_GREEN = rgb_vga[5:3];
-    assign VGA_BLUE  = rgb_vga[2:0];
+    assign VGA_RED   = rgb_vga[11:8];
+    assign VGA_GREEN = rgb_vga[7:4];
+    assign VGA_BLUE  = rgb_vga[3:0];
     
 endmodule

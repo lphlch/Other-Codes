@@ -30,3 +30,4 @@ set_property IOSTANDARD LVCMOS33 [get_ports CLK]
 set_property IOSTANDARD LVCMOS33 [get_ports RST_N]
 set_property IOSTANDARD LVCMOS33 [get_ports VGA_HSYNC]
 set_property IOSTANDARD LVCMOS33 [get_ports VGA_VSYNC]
+

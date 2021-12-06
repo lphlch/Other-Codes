@@ -1,7 +1,7 @@
 `timescale 1 ns/ 1 ps
 module VGA_color_line_vlg_tst();
     reg CLK, RST_N;  //系统时钟和低电平复位
-    reg [8:0] RGB;  //RGB颜色值
+    reg [11:0] RGB;  //RGB颜色值
     wire VGA_HSYNC, VGA_VSYNC;  //行同步VGA_HSYNC，场同步VGA_VSYNC
     wire [3:0] VGA_RED;
     wire [3:0] VGA_GREEN;
@@ -30,10 +30,10 @@ module VGA_color_line_vlg_tst();
     initial begin
         RGB=0;
         #100;
-        RGB=9'h0F0;
+        RGB=12'h0F0;
         #100;
-        RGB=9'hF0F;
+        RGB=12'h00F;
         #100;
-        RGB=9'hF00;
+        RGB=12'hF00;
     end
 endmodule
