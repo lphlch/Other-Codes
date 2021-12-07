@@ -14,7 +14,7 @@ module VGA_color_line (CLK,
     output [3:0] VGA_GREEN;
     output [3:0] VGA_BLUE;  //像素三基色输出R、G、B
     reg [11:0] rgb_vga;  //4位一组，分别为R、G、B
-    wire clk_vga;  //像素时钟 1688 * 1066 * 108 MZ
+    wire clk_vga;  //像素时钟
     
     // Horizontal Parameter(Pixel)
     parameter
@@ -105,15 +105,26 @@ module VGA_color_line (CLK,
     wire [10:0] xpos_vga, ypos_vga;
     assign xpos_vga = (hcnt < H_DISP) ? (hcnt + 1'b1) : 11'd0;  //横坐标 + 1（即1~H_DISP）
     assign ypos_vga = (vcnt < V_DISP) ? (vcnt + 1'b1) : 11'd0;  //竖坐标 + 1（即1~V_DISP）
-    
+
+    reg [15:0] addr;
+
+    blk_mem_gen_0 logo (
+    .clka(CLK),    // input wire clka
+    .wea(0),      // input wire [0 : 0] wea
+    .addra(addr),  // input wire [15 : 0] addra
+    .dina(0),    // input wire [11 : 0] dina
+    .douta(dataO)  // output wire [11 : 0] douta
+    );
+
     //显示
     always @ (posedge clk_vga or negedge RST_N)
     begin
-        if (!RST_N)
+        if (!RST_N) begin
             rgb_vga <= 0;
-        else
-        begin
-            /*            测试彩条
+            addr <= 0;
+        end
+        else begin
+             /*    //测试彩条
              if (xpos_vga > 0 && xpos_vga        <= 80) rgb_vga        <= 9'b111111111;//white
              else if (xpos_vga > 80 && xpos_vga  <= 160) rgb_vga  <= 9'b111000000;//red
              else if (xpos_vga > 160 && xpos_vga <= 240) rgb_vga <= 9'b111000111;//mangenta
@@ -134,15 +145,21 @@ module VGA_color_line (CLK,
              else rgb_vga                         <= 0;//black，这个很重要，不然颜色不怎么正常
              */
             
-            //显示像素
-            if (xpos_vga > 0 && xpos_vga <= 1280) begin
-                rgb_vga <= RGB;
+              //显示像素
+            if (xpos_vga > 0 && xpos_vga <= H_DISP || ypos_vga > 0 && ypos_vga <=V_DISP) begin
+                rgb_vga <= dataO;
+                addr<=addr+1;
             end
-            else
+            else begin
                 rgb_vga <= 0;
-            
+                addr<=0;
+            end 
+
         end
     end
+
+
+
     //分离颜色
     assign VGA_RED   = rgb_vga[11:8];
     assign VGA_GREEN = rgb_vga[7:4];
