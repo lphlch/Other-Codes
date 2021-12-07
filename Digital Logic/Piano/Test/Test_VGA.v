@@ -86,6 +86,7 @@ module VGA_color_line (CLK,
             else
                 vcnt <= vcnt;
         end
+        $display("rst_n=%d,hcnt=%d ,vcnt = %d", RST_N,hcnt,vcnt);
     end
     //场同步
     always @ (posedge clk_vga or negedge RST_N)
@@ -144,8 +145,27 @@ module VGA_color_line (CLK,
              else if (xpos_vga > 1200 && xpos_vga <= 1280) rgb_vga <= 9'b000000000;
              else rgb_vga                         <= 0;//black，这个很重要，不然颜色不怎么正常
              */
+
+             /*    //测试彩条
+             if (ypos_vga > 0 && ypos_vga        <= 100) rgb_vga        <= 9'b111111111;//white
+             else if (ypos_vga > 100 && ypos_vga <= 200) rgb_vga  <= 9'b111000000;
+             else if (ypos_vga > 200 && ypos_vga <= 300) rgb_vga <= 9'b000000111;//blue
+             else if (ypos_vga > 300 && ypos_vga <= 400) rgb_vga <= 9'b000111000;
+             else if (ypos_vga > 400 && ypos_vga <= 500) rgb_vga <= 9'b111111000;//yellow
+             else if (ypos_vga > 500 && ypos_vga <= 600) rgb_vga <= 9'b000111111;
+             else if (ypos_vga > 600 && ypos_vga <= 700) rgb_vga <= 9'b111000111;
+             else if (ypos_vga > 700 && ypos_vga <= 800) rgb_vga <= 9'b000000000;
+
+             else rgb_vga                         <= 0;
+             */
             
-              //显示像素
+            /*
+             if (ypos_vga > 0 && ypos_vga        <= 380) rgb_vga        <= 9'b000000111;//white
+             else rgb_vga <= 0;
+            */
+
+            $display("xpos_vga=%d, ypos_vga=%d", xpos_vga, ypos_vga);
+            /*  //显示像素
             if (xpos_vga > 0 && xpos_vga <= H_DISP || ypos_vga > 0 && ypos_vga <=V_DISP) begin
                 rgb_vga <= dataO;
                 addr<=addr+1;
@@ -153,7 +173,7 @@ module VGA_color_line (CLK,
             else begin
                 rgb_vga <= 0;
                 addr<=0;
-            end 
+            end */
 
         end
     end
@@ -164,5 +184,4 @@ module VGA_color_line (CLK,
     assign VGA_RED   = rgb_vga[11:8];
     assign VGA_GREEN = rgb_vga[7:4];
     assign VGA_BLUE  = rgb_vga[3:0];
-    
 endmodule

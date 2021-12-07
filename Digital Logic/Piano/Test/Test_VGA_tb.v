@@ -1,4 +1,4 @@
-`timescale 1 ns/ 1 ps
+`timescale 1 ns/ 100 ps
 module VGA_color_line_vlg_tst();
     reg CLK, RST_N;  //系统时钟和低电平复位
     reg [11:0] RGB;  //RGB颜色值
@@ -20,6 +20,8 @@ module VGA_color_line_vlg_tst();
     initial
         begin
             CLK = 0;
+            RST_N = 0;
+            #5
             RST_N = 1;
         end
     always
