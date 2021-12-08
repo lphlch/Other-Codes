@@ -23,7 +23,7 @@ int binarySearch(vector<int> &nums, int key, bool isLower)
 		int mid = (left + right) / 2;
 		if (isLower)
 		{
-			if (nums[mid] < key)
+			if (nums[mid] < key)    //difference between isLower and isHigher is that the '='
 			{
 				left = mid + 1;
 			}
@@ -31,7 +31,7 @@ int binarySearch(vector<int> &nums, int key, bool isLower)
 			{
 				right = mid - 1;
 			}
-			if (nums[left] == key && left == right + 1)
+			if (nums[left] == key && left == right + 1) //condition of found
 			{
 				return left;
 			}
