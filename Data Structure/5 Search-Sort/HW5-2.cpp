@@ -5,21 +5,24 @@
 #include <iostream>
 #include <vector>
 using namespace std;
-#define INT_MAX 2147483647
+#define INTMAX 2147483647
+
+/// <summary>
+/// Binary Sort Tree
+/// </summary>
+/// <typeparam name="T"></typeparam>
 template <typename T>
 class BST
 {
 public:
-	void insert(BST<T> **root, T data);
-	void searchAndDelete(BST<T> **root, T key);
-	bool search(BST<T> *root, T key);
-	void deleteNode(BST<T> **root, T key);
-	BST<T> *getMin(BST<T> *root);
-	int countNumber(BST<T> *root, T key);
-	T getPreData(BST<T> *root, T key, T preKey);
-	void print(BST<T> *root, int level = 0);
-	void inOrderTraverse(BST<T> *root, T key);
-	void inOrderTraverse(BST<T> *root);
+	void insert(BST<T> **root, T data);	// insert data into BST
+	void searchAndDelete(BST<T> **root, T key);	// search and delete data from BST
+	bool search(BST<T> *root, T key);	// judge whether the data is in BST
+	void deleteNode(BST<T> **root, T key);	// delete a node from BST
+	BST<T> *&getMin(BST<T> **root);	// get the minimum node of BST
+	int countNumber(BST<T> *root, T key);	// count the number of data in BST
+	T getPreData(BST<T> *root, T key, T preKey);	// get the predecessor data of data
+	void inOrderTraverse(BST<T> *root);	// in-order traverse BST, for debug
 	T getData();
 
 private:
@@ -29,10 +32,16 @@ private:
 	BST *rightChild = NULL;
 };
 
+/// <summary>
+/// insert data into BST
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="root">address of pointer to root</param>
+/// <param name="data">data to be inserted</param>
 template <typename T>
 void BST<T>::insert(BST<T> **root, T data)
 {
-
+	//use pointer to pointer to change the address of root
 	if (*root == NULL)
 	{
 		*root = new (BST<T>);
@@ -58,6 +67,12 @@ void BST<T>::insert(BST<T> **root, T data)
 	}
 }
 
+/// <summary>
+/// find and delete data from BST
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="root">address of pointer to root</param>
+/// <param name="key">data to be deleted</param>
 template <typename T>
 void BST<T>::searchAndDelete(BST<T> **root, T key)
 {
@@ -83,8 +98,15 @@ void BST<T>::searchAndDelete(BST<T> **root, T key)
 	}
 }
 
-template<typename T>
-bool BST<T>::search(BST<T>* root, T key)
+/// <summary>
+/// find data that whether in BST or not
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="root">pointer to root</param>
+/// <param name="key">data to be found</param>
+/// <returns>true if in tree</returns>
+template <typename T>
+bool BST<T>::search(BST<T> *root, T key)
 {
 	if (root == NULL)
 	{
@@ -107,6 +129,12 @@ bool BST<T>::search(BST<T>* root, T key)
 	}
 }
 
+/// <summary>
+/// delete a node from BST
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="root">address of pointer to node which needs to be deleted</param>
+/// <param name="key">data to be deleted</param>
 template <typename T>
 void BST<T>::deleteNode(BST<T> **root, T key)
 {
@@ -142,28 +170,41 @@ void BST<T>::deleteNode(BST<T> **root, T key)
 			else
 			{
 				// find the min node in right subtree
-				BST<T> *min = getMin((*root)->rightChild);
-				(*root)->data = min->data; // replace the (*root) with the min node
-				(*root)->count = min->count;
-				deleteNode(&min, min->data); // delete the min node
+				BST<T> *&min = (getMin(&(*root)->rightChild));
+				(*root)->data = (min)->data; // replace the (*root) with the min node
+				(*root)->count = (min)->count;
+				deleteNode(&(min), (min)->data); // delete the min node
 			}
 		}
 	}
 }
 
+/// <summary>
+/// get the min node in BST
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="root">address of pointer to subtree root</param>
+/// <returns>reference to pointer to min node of BST</returns>
 template <typename T>
-BST<T> *BST<T>::getMin(BST<T> *root)
+BST<T> *&BST<T>::getMin(BST<T> **root)
 {
-	if (root->leftChild == NULL)
+	if ((*root)->leftChild == NULL)
 	{
-		return root;
+		return (*root);
 	}
 	else
 	{
-		return getMin(root->leftChild);
+		return getMin(&(*root)->leftChild);
 	}
 }
 
+/// <summary>
+/// count the number of data in BST
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="root">pointer to root</param>
+/// <param name="key">data to be counted</param>
+/// <returns>count</returns>
 template <typename T>
 int BST<T>::countNumber(BST<T> *root, T key)
 {
@@ -188,12 +229,20 @@ int BST<T>::countNumber(BST<T> *root, T key)
 	}
 }
 
+/// <summary>
+/// get direct predecessor of a data
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="root">pointer to root</param>
+/// <param name="key">data to be found a predecessor</param>
+/// <param name="preKey">temp predecessor used in recursion</param>
+/// <returns>predecessor value of the data</returns>
 template <typename T>
 T BST<T>::getPreData(BST<T> *root, T key, T preKey)
 {
 	if (root == NULL)
 	{
-		return INT_MAX;
+		return INTMAX;
 	}
 	if (root->data > key)
 	{
@@ -217,11 +266,11 @@ T BST<T>::getPreData(BST<T> *root, T key, T preKey)
 	}
 	else
 	{
-		if (preKey == INT_MAX) // if found the key but no preKey
+		if (preKey == INTMAX) // if found the key but no preKey
 		{
 			if (root->leftChild == NULL) // no pre node
 			{
-				return INT_MAX;
+				return INTMAX;
 			}
 			else // have pre node, get the smallest data
 			{
@@ -249,41 +298,11 @@ T BST<T>::getPreData(BST<T> *root, T key, T preKey)
 	}
 }
 
-template <typename T>
-void BST<T>::print(BST<T> *root, int level)
-{
-	// print BST in preorder
-	if (root == NULL)
-	{
-		return;
-	}
-	for (int i = 0; i < level; i++)
-	{
-		cout << "    ";
-	}
-	cout << root->data << "(" << root->count << ")" << endl;
-	print(root->leftChild, level + 1);
-	print(root->rightChild, level + 1);
-}
-
-vector<int> dataOrder;
-template <typename T>
-void BST<T>::inOrderTraverse(BST<T> *root, T key)
-{
-	if (root == NULL)
-	{
-		return;
-	}
-
-	inOrderTraverse(root->leftChild, key);
-	if (root->data > key)
-	{
-		return;
-	}
-	dataOrder.push_back(root->data);
-	inOrderTraverse(root->rightChild, key);
-}
-
+/// <summary>
+/// print inorder sequence of BST. For debug
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="root">pointer to root</param>
 template <typename T>
 void BST<T>::inOrderTraverse(BST<T> *root)
 {
@@ -297,6 +316,11 @@ void BST<T>::inOrderTraverse(BST<T> *root)
 	inOrderTraverse(root->rightChild);
 }
 
+/// <summary>
+/// return a data of BST node
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <returns>node data</returns>
 template <typename T>
 T BST<T>::getData()
 {
@@ -330,13 +354,13 @@ int main()
 			cout << root->countNumber(root, data) << endl;
 			break;
 		case 4:
-			cout << (root->getMin(root))->getData() << endl;
+			cout << (root->getMin(&root))->getData() << endl;
 			break;
 		case 5:
 		{
 			cin >> data;
-			int preData = root->getPreData(root, data, INT_MAX);
-			if (preData == INT_MAX)
+			int preData = root->getPreData(root, data, INTMAX);
+			if (preData == INTMAX)
 			{
 				cout << "None" << endl;
 			}
@@ -344,33 +368,11 @@ int main()
 			{
 				cout << preData << endl;
 			}
-
-			/* 	dataOrder.clear();
-				root->inOrderTraverse(root, data);
-				for (int i = 0; i < dataOrder.size(); i++)
-				{
-					if (dataOrder[i] >= data)
-					{
-						if (i == 0)
-						{
-							cout << "None";
-						}
-						else
-						{
-							cout << dataOrder[i - 1] << endl;
-						}
-						break;
-					}
-				}
-				if(data>dataOrder[dataOrder.size()-1])
-				{
-					cout << dataOrder[dataOrder.size()-1]<< endl;
-				}*/
 		}
-			break;
+		break;
 		case 6:
-            root->inOrderTraverse(root);
-            break;
+			root->inOrderTraverse(root);
+			break;
 		default:
 			break;
 		}
