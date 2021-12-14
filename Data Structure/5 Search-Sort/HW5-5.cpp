@@ -69,7 +69,7 @@ int merge(const int leftBound, const int midBound, const int rightBound, int src
 		{
 			dst[leftBound + count] = src[rightIndex];
 			rightIndex++;
-			inversePair += mid - leftIndex;
+			inversePair += mid - leftIndex; // count the inverse pair
 		}
 		count++;
 	}
@@ -107,12 +107,13 @@ int mergeSection(const int length, const int n, int src[], int dst[])
 	{
 		inversePair = inversePair + merge(i, i + length / 2, i + length - 1, src, dst);
 	}
+
 	// merge the last section
 	if (i < n - length / 2)
 	{
-		inversePair = inversePair + merge(i, i + length / 2, n - 1, src, dst);
+		inversePair = inversePair + merge(i, i + length / 2, n - 1, src, dst);  //if can be divided into 2 sections, one has enough length
 	}
-	else
+	else    //if can not be divided
 	{
 		for (int j = i; j < n; j++)
 		{
