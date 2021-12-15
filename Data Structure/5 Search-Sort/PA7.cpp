@@ -9,8 +9,8 @@
 #include <iomanip>
 using namespace std;
 
-const int BLANK_DATAS = 10;	//blanks between data
-const int BLANK_NAME = 30;	//blanks between name
+const int BLANK_DATAS = 10; // blanks between data
+const int BLANK_NAME = 30;	// blanks between name
 
 class Dataset
 {
@@ -18,9 +18,9 @@ private:
 	map<string, double> datas; // name, value
 
 public:
-	bool insert(string, double);	//insert a new data
-	double countSum();				//count the sum of all data, weighted
-	void print();					//print all data
+	bool insert(string, double); // insert a new data
+	double countSum();			 // count the sum of all data, weighted
+	void print();				 // print all data
 };
 
 class TireTree
@@ -32,10 +32,10 @@ private:
 	vector<TireTree> nextLetters; // children of the node
 public:
 	Dataset& getDatas();
-	void insertWord(string word);	//insert a word into the tire tree
-	bool inputWordData(string word, string dataName, double dataValue);	//input a word's data
-	TireTree* search(string word);	//find the node of the word
-	void traverse(string word, priority_queue<pair<double, string>>& scores);	//traverse the tire tree and find the words with the highest scores
+	void insertWord(string word);											  // insert a word into the tire tree
+	bool inputWordData(string word, string dataName, double dataValue);		  // input a word's data
+	TireTree* search(string word);											  // find the node of the word
+	void traverse(string word, priority_queue<pair<double, string>>& scores); // traverse the tire tree and find the words with the highest scores
 	bool checkComplete();
 };
 
@@ -44,12 +44,12 @@ class Fleet
 private:
 	TireTree tireTreeRoot;
 	vector<string> datasName;
-	priority_queue<pair<double, string>> fleetScore;	// score, name. Only available when print.
+	priority_queue<pair<double, string>> fleetScore; // score, name. Only available when print.
 public:
-	void insertTable(string tableName, double weight);	//insert a table
-	void print();						//print scores
-	void printScore(string name);		//print the score of a name, called in print()
-	void createFleet(string fleetName);	//create a fleet
+	void insertTable(string tableName, double weight); // insert a table
+	void print();									   // print scores
+	void printScore(string name);					   // print the score of a name, called in print()
+	void createFleet(string fleetName);				   // create a fleet
 };
 
 int main()
@@ -169,17 +169,17 @@ TireTree* TireTree::search(string word)
 /// </summary>
 /// <param name="word">current warship name</param>
 /// <param name="scores">priority queue. Store scores of all warships</param>
-void TireTree::traverse(string word, priority_queue<pair<double, string >>& scores)
+void TireTree::traverse(string word, priority_queue<pair<double, string>>& scores)
 {
 	if (isEnd)
 	{
 		double sum = datas.countSum();
-		scores.push(make_pair(sum, word));	//count the sum of the datas, adding to the priority queue
+		scores.push(make_pair(sum, word)); // count the sum of the datas, adding to the priority queue
 	}
 
 	for (int i = 0; i < nextLetters.size(); i++)
 	{
-		nextLetters[i].traverse(word + nextLetters[i].letter, scores);	//find next letter
+		nextLetters[i].traverse(word + nextLetters[i].letter, scores); // find next letter
 	}
 }
 
@@ -203,7 +203,7 @@ bool Dataset::insert(string name, double data)
 double Dataset::countSum()
 {
 	double sum = 0;
-	for (auto it = datas.begin(); it != datas.end(); it++)	//traverse all datas
+	for (auto it = datas.begin(); it != datas.end(); it++) // traverse all datas
 	{
 		sum += (it->second);
 	}
@@ -228,15 +228,15 @@ void Dataset::print()
 /// <param name="weight">weight of this kind of data</param>
 void Fleet::insertTable(string tableName, double weight)
 {
-	if (find(datasName.begin(), datasName.end(), tableName) != datasName.end())	//if already exist
+	if (find(datasName.begin(), datasName.end(), tableName) != datasName.end()) // if already exist
 	{
 		cout << "The table has already existed." << endl;
 		return;
 	}
 
-	datasName.push_back(tableName);	//add table name
+	datasName.push_back(tableName); // add table name
 	cout << "\nNow please enter warship name and its data, 'end' as an end, :" << endl;
-	while (true)	//input each warship data
+	while (true) // input each warship data
 	{
 		string warshipName;
 		double data;
@@ -246,7 +246,7 @@ void Fleet::insertTable(string tableName, double weight)
 			break;
 		}
 		cin >> data;
-		if (!tireTreeRoot.inputWordData(warshipName, tableName, data * weight))	//insert data*weight into tire tree
+		if (!tireTreeRoot.inputWordData(warshipName, tableName, data * weight)) // insert data*weight into tire tree
 		{
 			cout << "Error: " << warshipName << " is not in the fleet." << endl;
 		}
@@ -259,16 +259,16 @@ void Fleet::insertTable(string tableName, double weight)
 void Fleet::print()
 {
 	cout << "---------------------------------------------------------------------------------------" << endl;
-	tireTreeRoot.traverse("", fleetScore);	//sort
+	tireTreeRoot.traverse("", fleetScore); // sort
 
-	cout << left << setw(BLANK_NAME) << "Name";	//title
+	cout << left << setw(BLANK_NAME) << "Name"; // title
 	for (auto name : datasName)
 	{
 		cout << setw(BLANK_DATAS) << name;
 	}
 	cout << setw(BLANK_DATAS) << "Score" << endl;
 
-	while (!fleetScore.empty())	//print
+	while (!fleetScore.empty()) // print
 	{
 		auto& top = fleetScore.top();
 		cout << left << setw(BLANK_NAME) << top.second << " ";
