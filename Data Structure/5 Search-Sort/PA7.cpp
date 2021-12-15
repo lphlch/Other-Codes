@@ -258,7 +258,7 @@ void Fleet::insertTable(string tableName, double weight)
 /// </summary>
 void Fleet::print()
 {
-	cout << "---------------------------------------------------------------------------------------" << endl;
+	cout << "-------------------------------------------------------------------" << endl;
 	tireTreeRoot.traverse("", fleetScore); // sort
 
 	cout << left << setw(BLANK_NAME) << "Name"; // title
@@ -307,31 +307,40 @@ DeepSpace
 UltimateLaw
 Quantum
 Gravitation
+Pacific
+Einstein
 CannonFodderI
+StarRing
 end
 
 Fire 10
-NaturalSelection 15
-BlueSpace 20
-Enterprise 14
-DeepSpace 33
+Einstein 4.484
+NaturalSelection 15.422
+BlueSpace 20.1
+Enterprise 14.2
+DeepSpace 33.54
+Pacific 12.5
 UltimateLaw 44
-
-Gravitation 5
+Quantum 34.5
+Gravitation 52.4
 CannonFodderI 1.6
 CannonFodderII 1.44
+StarRing 0.11
 end
 
-Speed 4
-NaturalSelection 4
-BlueSpace 2
-Enterprise 5
-DeepSpace 31
-UltimateLaw 12
-Quantum 32
-Gravitation 15.6
+Speed 5
+NaturalSelection 4.4
+BlueSpace 6.42
+Enterprise 4.55
+Einstein 7.555
+DeepSpace 8
+UltimateLaw 5
+Quantum 4.54
+Pacific 4.44
+Gravitation 5.6
 CannonFodderI 1.62
 CannonFodderII 0.785
+StarRing 300
 end
 end
 */
