@@ -17,13 +17,13 @@ module BuzzerCounter (input iClk,
         end
         else
         begin
-            if (iCountEnable) //always 1
+             if (iCountEnable) //always 1
             begin
                 count <= 1;
                 oRing <= 1;
             end
             else    //stop after a cycle
-            begin
+            begin 
                 if (count == i) begin   //count to 0.2s
                     count <= 0;
                     oRing <= 0;
