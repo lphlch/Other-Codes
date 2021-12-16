@@ -1,7 +1,7 @@
 module BuzzerCounter (input iClk,
                       input iReset_n,
                       input iCountEnable,
-                      output oRing);
+                      output reg oRing);
     
     // iCountEnable: if 1, oRing always 1(press down key), if 0, start counting after a cycle
     // oRing: if 1, note is able to play. Default to play 0.2s. 0 to stop playing

@@ -1,8 +1,8 @@
 module NotePlayer (input iClk,
                    input iReset_n,
                    input iRing,
-                   input iFreq,
-                   output oNote);
+                   input[12:0] iFreq,
+                   output reg oNote);
     //input iRing: control whether the note is ringing or not
     //output oNote: output to interface
     

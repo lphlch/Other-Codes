@@ -8,7 +8,7 @@ module BuzzerDecoder (input iClk,
     // oBuzzerEnable: enable the buzzer
     // oFreq: frequency of the buzzer
     
-    wire [12:0]frequency;
+    reg [12:0]frequency;
     always @(posedge iClk) begin  // choose the frequency
         
         if (!iReset_n) begin
@@ -16,7 +16,7 @@ module BuzzerDecoder (input iClk,
             frequency <= 0;
         end
         else begin
-            case (iFreqType) begin
+            case (iFreqType)
             0:  // not defined
             frequency <= frequency;
             1:  // C#3 138
