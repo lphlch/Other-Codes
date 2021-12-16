@@ -2,20 +2,26 @@ module top (input iClk,
             input iReset_n,
             input iPs2_Clk,
             input iPs2_Data,
-            output oPWM,
-            output oLightsFreq,
+            output oPWM
+/*             output oLightsFreq,
             output oLightsRing,
             output oLightCounter,
             output oLightPWM,
-            output oLightBuzzerFreq);
+            output oLightBuzzerFreq */);
 
     wire buzzer_Ring_Enable,buzzer_Counter_Enable;
     wire [12:0] buzzer_Freq;
-    wire ps2_Flag;
+    wire ps2_Flag,clk_1M;
     wire [7:0] ps2_Data,freq_Data;
 
+	Frenp frep_dut(
+		.clk(iClk),
+		.rst_n(iReset_n),
+		.clk_1M(clk_1M)
+		);
+
     Ps2Input ps2Input(
-        .iClk(iClk),
+        .iClk(clk_1M),
         .iReset_n(iReset_n),
         .iPs2_Clk(iPs2_Clk),
         .iPs2_Data(iPs2_Data),
@@ -24,23 +30,24 @@ module top (input iClk,
     );
 
     Ps2Decoder ps2Decoder(
-    .iClk(iClk),
+    .iClk(clk_1M),
     .iReset_n(iReset_n),
     .iFlag(ps2_Flag),
     .iData(ps2_Data),
     .oData(freq_Data)
     );
     
-    Controler controler(
+    
+/*     Controler controler(
         .iClk(iClk),
         .iReset_n(iReset_n),
         .iPs2_Data(freq_Data),
         .iCount(buzzer_Counter_Signal),
         //.oRing(buzzer_Ring_Enable),
         .oCountEnable(buzzer_Counter_Enable)
-    );
+    ); */
 
-    BuzzerDecoder buzzerDecoder(
+    /* BuzzerDecoder buzzerDecoder(
         .iClk(iClk),
         .iReset_n(iReset_n),
         .iFreqType(freq_Data),
@@ -50,18 +57,26 @@ module top (input iClk,
     BuzzerCounter buzzerCounter(
         .iClk(iClk),
         .iReset_n(iReset_n),
-        .iCountEnable(buzzer_Counter_Enable),
+        //.iCountEnable(buzzer_Counter_Enable),
         .oRing(buzzer_Ring_Enable)
+    ); */
+
+    Buzzer buzzer(
+        .clk(clk_1M),
+        .rst_n(iReset_n),
+        .data_n(freq_Data),
+        .data(buzzer_Freq),
+        .beep(oPWM)
     );
 
-    NotePlayer notePlayer(
+/*     NotePlayer notePlayer(
         .iClk(iClk),
         .iReset_n(iReset_n),
-        .iRing(buzzer_Ring_Enable),
+        .iRing(1),
         .iFreq(buzzer_Freq),
         .oNote(oPWM)
-    );
-
+    ); */
+/* 
     Lights lightsFreq(
         .iClk(iClk),
         .iReset_n(iReset_n),
@@ -95,6 +110,6 @@ module top (input iClk,
         .iReset_n(iReset_n),
         .iEnable(buzzer_Freq),
         .oLights(oLightBuzzerFreq)
-    );
+    ); */
 
 endmodule
