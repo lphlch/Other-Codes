@@ -1,27 +1,24 @@
 module BuzzerDecoder (input iClk,
-                      input iReset,
-                      input iEnable,
-                      input [5:0]iFreqType,
-                      output oBuzzerEnable,
-                      output [5:0]oFreq);
+                      input iReset_n,
+                      input [7:0]iFreqType,
+                      //output oBuzzerEnable,
+                      output [12:0]oFreq);
     
-    // iReset: reset the buzzer
-    // iEnable: when high, the buzzer is enabled to output the frequency
     // iFreq: frequency type of the buzzer, from C3 to B7, 60 in total
     // oBuzzerEnable: enable the buzzer
     // oFreq: frequency of the buzzer
     
-    wire [11:0]frequency;
-    always @(posedge clk) begin  // choose the frequency
+    wire [12:0]frequency;
+    always @(posedge iClk) begin  // choose the frequency
         
-        if (iReset) begin
+        if (!iReset_n) begin
             //reset
             frequency <= 0;
         end
         else begin
             case (iFreqType) begin
-            0:  // C3 130
-            frequency <= 1000000/130;
+            0:  // not defined
+            frequency <= frequency;
             1:  // C#3 138
             frequency <= 1000000/138;
             2:  // D3 146
@@ -141,56 +138,16 @@ module BuzzerDecoder (input iClk,
             59: // B7 3951
             frequency <= 1000000/3951;
             
+            99: // stop
+            frequency <= frequency;
             default:
             frequency <= 0;
             endcase
         end
     end
     
-    assign oFreq         = iEnable? frequency,0;
-    assign oBuzzerEnable = iReset? iEnable:0;
+    //assign oBuzzerEnable = (iFreqType==99)? 0:1;    //
+    assign oFreq         = frequency;
 endmodule
     
-    module BuzzerStimulater (
-        input iClk,
-        input iReset,
-        input iBooster,
-        input [5:0]iFreqType,
-        output oBuzzerEnable,
-        output [5:0]oFreq
-        );
-        // iReset: reset the buzzer
-        // iBooster: booster of the buzzer, when high, start the counter(only this will be used in this module, other will be transferred to the BuzzerDecoder)
-        // iFreq: frequency type of the buzzer, from C3 to B7, 60 in total
-        // oBuzzerEnable: enable the buzzer
-        // oFreq: frequency of the buzzer
-        
-        parameter i = 200000;   //0.2s
-        reg[20:0] count;
-        reg buzzerDecoderEnable;
-        always @(posedge clk) begin //counter, sound lasting 0.2s in default
-            if (iReset) begin   //reset
-                count         <= 0;
-                buzzerDecoderEnable <= 0;
-            end
-            else begin
-                if (iBooster) begin //start counting
-                    count         <= 1;
-                    buzzerDecoderEnable <= 1;
-                end
-                
-                if (count == i) begin   //count to 0.2s
-                    count         <= 0;
-                    buzzerDecoderEnable <= 0;
-                end
-                
-                if (count != 0) begin   //continue counting
-                    count         <= count + 1;
-                    buzzerDecoderEnable <= 1;
-                end
-            end
-            
-        end
-
-        BuzzerDecoder buzzerDecoder(iClk, iReset, buzzerDecoderEnable, iFreqType, oBuzzerEnable, oFreq);
-    endmodule
+    

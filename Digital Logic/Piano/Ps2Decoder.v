@@ -1,6 +1,6 @@
-module Decoder(
+module Ps2Decoder(
 	input iClk,
-	input iRst_n,
+	input iReset_n,
 	input iFlag,
 	input [7:0] iData,
 
@@ -9,8 +9,8 @@ module Decoder(
 
 	reg [15:0] temp;
 	
-	always @ (posedge iClk or negedge iRst_n)
-		if(!iRst_n)
+	always @ (posedge iClk or negedge iReset_n)
+		if(!iReset_n)
 			begin
 				temp <= 16'd0;
 			end
@@ -26,15 +26,15 @@ module Decoder(
 					end
 			end
 			
-	always @ (posedge iClk or negedge iRst_n)
-		if(!iRst_n)
+	always @ (posedge iClk or negedge iReset_n)
+		if(!iReset_n)
 			begin
 				oData <= 8'b0;
 			end
 		else
 			begin
 				casex (temp)
-					{8'hf0,8'hxx} : begin oData <= 8'b0; end    //when release, stop
+					{8'hf0,8'hxx} : begin oData <=99; end    //when release, stop
 					default :case(temp[7:0])
 									//6 Mid Control
 									8'h71:begin oData <= 36;end //del
@@ -54,7 +54,7 @@ module Decoder(
 									8'h7b:begin oData <= 35;end //-
 
 									8'he0:begin oData <= oData;end  //ignore E0
-									default:begin oData <= 8'b0; end
+									default:begin oData <= 8'b0; end	//not defined
 								endcase
 				endcase
 			end
