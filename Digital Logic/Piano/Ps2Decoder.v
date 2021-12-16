@@ -36,22 +36,91 @@ module Ps2Decoder(
 				casex (temp)
 					{8'hf0,8'hxx} : begin oData <=99; end    //when release, stop
 					default :case(temp[7:0])
+									//first line
+									8'h16:begin oData <= 32;end	//1
+									8'h1e:begin oData <= 34;end	//2
+									8'h26:begin oData <= 36;end	//3
+									8'h25:begin oData <= 37;end	//4
+									8'h2e:begin oData <= 39;end	//5
+									8'h36:begin oData <= 41;end	//6
+									8'h3d:begin oData <= 43;end	//7
+									8'h3e:begin oData <= 44;end	//8
+									8'h46:begin oData <= 46;end	//9
+									8'h45:begin oData <= 48;end	//0
+									8'h4e:begin oData <= 49;end	//-
+									8'h55:begin oData <= 51;end	//=
+									8'h66:begin oData <= 54;end	//backspace
+
+									//second line
+									8'h0d:begin oData <= 40;end	//tab
+									8'h15:begin oData <= 20;end	//q
+									8'h1d:begin oData <= 22;end	//w
+									8'h24:begin oData <= 24;end	//e
+									8'h2d:begin oData <= 25;end	//r
+									8'h2c:begin oData <= 27;end	//t
+									8'h35:begin oData <= 29;end	//y
+									8'h3c:begin oData <= 31;end	//u
+									8'h43:begin oData <= 32;end	//i
+									8'h44:begin oData <= 34;end	//o
+									8'h4b:begin oData <= 36;end	//p
+									8'h54:begin oData <= 37;end	//[
+									8'h5b:begin oData <= 39;end	//]
+									8'h5d:begin oData <= 41;end	//\
+
+									//third line
+									8'h58:begin oData <= 28;end	//capslock
+									8'h1c:begin oData <= 8;end	//a
+									8'h1b:begin oData <= 10;end	//s
+									8'h23:begin oData <= 12;end	//d
+									8'h2b:begin oData <= 13;end	//f
+									8'h34:begin oData <= 15;end	//g
+									8'h33:begin oData <= 17;end	//h
+									8'h3b:begin oData <= 19;end	//j
+									8'h42:begin oData <= 20;end	//k
+									8'h4b:begin oData <= 22;end	//l
+									8'h4c:begin oData <= 24;end	//;
+									8'h52:begin oData <= 25;end	//'
+
+									//fourth line
+									8'h12:begin oData <= 23;end	//shift
+									8'h1a:begin oData <= 1;end	//z
+									8'h22:begin oData <= 2;end	//x
+									8'h21:begin oData <= 3;end	//c
+									8'h2a:begin oData <= 4;end	//v
+									8'h32:begin oData <= 5;end	//b
+									8'h31:begin oData <= 6;end	//n
+									8'h3a:begin oData <= 7;end	//m
+									8'h41:begin oData <= 8;end	//,
+									8'h49:begin oData <= 10;end	//.
+									8'h4a:begin oData <= 12;end	///
+
+									//fifth line
+									8'h14:begin oData <= 30;end	//ctrl
+									8'h1f:begin oData <= 18;end	//win
+									8'h11:begin oData <= 16;end	//alt
+									8'h29:begin oData <= 16;end	//space
+
 									//6 Mid Control
-									8'h71:begin oData <= 36;end //del
-									8'h69:begin oData <= 38;end //end
-									8'h7a:begin oData <= 40;end //pgdn
-									8'h70:begin oData <= 41;end //ins
-									8'h6c:begin oData <= 43;end //home
-									//8'h7d:begin oData <= 45;end   //pgup
+									8'h71:begin oData <= 56;end //del
+									8'h69:begin oData <= 58;end //end
+									8'h7a:begin oData <= 60;end //pgdn
+									8'h70:begin oData <= 61;end //ins
+									8'h6c:begin oData <= 63;end //home
+									//8'h7d:begin oData <= 65;end   //pgup
 
 									//small
-									8'h75:begin oData <= 24;end //8
-									8'h7d:begin oData <= 26;end //9
-									8'h79:begin oData <= 28;end //+
-									8'h77:begin oData <= 29;end //num
-									8'h4a:begin oData <= 31;end // /
-									8'h7c:begin oData <= 33;end //*
-									8'h7b:begin oData <= 35;end //-
+									8'h75:begin oData <= 44;end //8
+									8'h7d:begin oData <= 46;end //9
+									8'h79:begin oData <= 48;end //+
+									8'h77:begin oData <= 49;end //num
+									8'h4a:begin oData <= 51;end // /
+									8'h7c:begin oData <= 53;end //*
+									8'h7b:begin oData <= 55;end //-
+
+									//3 right top
+									//8'h7c:begin oData <= 56;end //printscreen
+									8'h7e:begin oData <= 52;end //scrolllock
+									//8'h7f:begin oData <= 60;end //pause
 
 									8'he0:begin oData <= oData;end  //ignore E0
 									default:begin oData <= 8'b0; end	//not defined
