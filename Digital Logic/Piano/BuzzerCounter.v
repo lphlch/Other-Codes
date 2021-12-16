@@ -6,7 +6,7 @@ module BuzzerCounter (input iClk,
     // iCountEnable: if 1, oRing always 1(press down key), if 0, start counting after a cycle
     // oRing: if 1, note is able to play. Default to play 0.2s. 0 to stop playing
     
-    parameter i = 5;   //0.2s
+    parameter i = 200000;   //0.2s
     reg[20:0] count;
     always @(posedge iClk) //counter, sound lasting 0.2s in default
     begin

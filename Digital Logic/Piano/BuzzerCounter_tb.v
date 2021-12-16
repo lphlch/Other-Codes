@@ -14,7 +14,7 @@ module BuzzerCounter_tb ();
     initial begin
         #5
         rst_n    = 1;
-        counterE = 0;
+
         #15
         counterE = 1;
         #100

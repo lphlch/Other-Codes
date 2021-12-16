@@ -33,3 +33,21 @@ module Lights2 (input iClk,
         end
     end
 endmodule
+
+module Lights3 (input iClk,
+               input iReset_n,
+               input [12:0]iEnable,
+               output reg oLights
+               );
+    
+    always @(posedge iClk) begin
+        if (!iReset_n)
+        begin
+            oLights <= 0;
+        end
+        else
+        begin
+            oLights = (iEnable==0)? 0 : 1;
+        end
+    end
+endmodule

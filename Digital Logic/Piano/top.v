@@ -5,7 +5,9 @@ module top (input iClk,
             output oPWM,
             output oLightsFreq,
             output oLightsRing,
-            output oLightCounter);
+            output oLightCounter,
+            output oLightPWM,
+            output oLightBuzzerFreq);
 
     wire buzzer_Ring_Enable,buzzer_Counter_Enable;
     wire [12:0] buzzer_Freq;
@@ -81,4 +83,18 @@ module top (input iClk,
         .oLights(oLightCounter)
     );
     
+    Lights2 lightNote(
+        .iClk(iClk),
+        .iReset_n(iReset_n),
+        .iEnable(oPWM),
+        .oLights(oLightPWM)
+    );
+
+    Lights3 lightBUzzerFreq(
+        .iClk(iClk),
+        .iReset_n(iReset_n),
+        .iEnable(buzzer_Freq),
+        .oLights(oLightBuzzerFreq)
+    );
+
 endmodule
