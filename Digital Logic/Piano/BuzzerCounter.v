@@ -1,6 +1,6 @@
 module BuzzerCounter (input iClk,
                       input iReset_n,
-                      //input iCountEnable,
+                      input iCountEnable,
                       output reg oRing);
     
     // iCountEnable: if 1, oRing always 1(press down key), if 0, start counting after a cycle
@@ -17,13 +17,13 @@ module BuzzerCounter (input iClk,
         end
         else
         begin
-/*             if (iCountEnable) //always 1
+             if (iCountEnable) //always 1
             begin
                 count <= 1;
                 oRing <= 1;
             end
             else    //stop after a cycle
-            begin */
+            begin 
                 if (count == i) begin   //count to 0.2s
                     count <= 0;
                     oRing <= 0;
@@ -34,7 +34,7 @@ module BuzzerCounter (input iClk,
                         oRing <= 1;
                     end
                 end
-            //end
+            end
             
         end
         

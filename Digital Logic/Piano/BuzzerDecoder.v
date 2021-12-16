@@ -12,13 +12,12 @@ module BuzzerDecoder (input iClk,
     always @(posedge iClk) begin  // choose the frequency
         
         if (!iReset_n) begin
-            //reset
             frequency <= 0;
         end
         else begin
             case (iFreqType)
             0:  // not defined
-            frequency <= 0;
+            frequency <= frequency;
             1:  // C#3 138
             frequency <= 1000000/138;
             2:  // D3 146
@@ -146,8 +145,7 @@ module BuzzerDecoder (input iClk,
         end
     end
     
-    //assign oBuzzerEnable = (iFreqType==99)? 0:1;    //
-    assign oFreq         = frequency;
+    assign oFreq = frequency;
 endmodule
     
     
