@@ -2,6 +2,7 @@ module top (input iClk,
             input iReset_n,
             input iPs2_Clk,
             input iPs2_Data,
+            input iSongSelect,
             output oVGA_Hsync,
             output oVGA_Vsync,
             output [3:0] oVGA_Red,
@@ -18,7 +19,8 @@ module top (input iClk,
     wire buzzer_Ring_Enable,buzzer_Counter_Enable;
     wire [12:0] buzzer_Freq;
     wire ps2_Flag,clk;
-    wire [7:0] ps2_Data,freq_Data;
+    wire [7:0] ps2_Data,ps2_Decoded_Data,song_Data,freq_Data;
+    wire songSelector;
 
 	Frenp frep_dut(
 		.iClk(iClk),
@@ -40,15 +42,25 @@ module top (input iClk,
     .iReset_n(iReset_n),
     .iFlag(ps2_Flag),
     .iData(ps2_Data),
-    .oData(freq_Data)
+    .oData(ps2_Decoded_Data)
     );
     
-     Controler controler(
+    Controler controler(
         .iClk(clk),
         .iReset_n(iReset_n),
-        .iPs2_Data(freq_Data),
+        .iPs2_Data(ps2_Decoded_Data),
+        .iSong_Data(song_Data),
+        .iSongSelect(iSongSelect),
+        .oFreq_Data(freq_Data),
         .oCountEnable(buzzer_Counter_Enable)
     ); 
+
+    OnlyMyRailGun song1(
+        .iClk(clk),
+        .iReset_n(iReset_n),
+        .iEnable(iSongSelect),
+        .oFreq(song_Data)
+    );
 
      BuzzerDecoder buzzerDecoder(
         .iClk(clk),

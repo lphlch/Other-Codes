@@ -1,6 +1,9 @@
 module Controler (input iClk,
                   input iReset_n,
                   input [7:0] iPs2_Data,
+                  input [7:0] iSong_Data,
+                  input iSongSelect,
+                  output [7:0] oFreq_Data,
                   output reg oCountEnable);
     //iPs2_Data: keyboard data after decoded, if 99, stop playing note after a cycle
 
@@ -22,11 +25,13 @@ module Controler (input iClk,
                 oCountEnable <= 1;
             end
 
-            //oRing<=iCount;
+            if(iSongSelect == 1)begin
+                oCountEnable<=1;
+            end
         end
     end
     
-    
+    assign oFreq_Data=iSongSelect?iSong_Data:iPs2_Data;
 
     
     

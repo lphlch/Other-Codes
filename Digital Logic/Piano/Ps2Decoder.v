@@ -62,7 +62,7 @@ module Ps2Decoder(
 									8'h3c:begin oData <= 31;end	//u
 									8'h43:begin oData <= 32;end	//i
 									8'h44:begin oData <= 34;end	//o
-									8'h4b:begin oData <= 36;end	//p
+									8'h4d:begin oData <= 36;end	//p
 									8'h54:begin oData <= 37;end	//[
 									8'h5b:begin oData <= 39;end	//]
 									8'h5d:begin oData <= 41;end	//\
