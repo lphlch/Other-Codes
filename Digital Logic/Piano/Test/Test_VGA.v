@@ -7,14 +7,14 @@ module VGA_color_line (CLK,
                        VGA_GREEN,
                        VGA_BLUE);
     
-    input CLK, RST_N;  //??????????
-    input [11:0]RGB;         //RGB??
-    output VGA_HSYNC, VGA_VSYNC;  //???VGA_HSYNC????VGA_VSYNC
+    input CLK, RST_N;
+    input [11:0]RGB;
+    output VGA_HSYNC, VGA_VSYNC;
     output [3:0] VGA_RED;
     output [3:0] VGA_GREEN;
-    output [3:0] VGA_BLUE;  //???????R?G?B
-    reg [11:0] rgb_vga;  //4???????R?G?B
-    wire clk_vga;  //????
+    output [3:0] VGA_BLUE;
+    reg [11:0] rgb_vga;
+    wire clk_vga;  //65MHZ
     
     // Horizontal Parameter(Pixel)
     parameter
@@ -33,7 +33,7 @@ module VGA_color_line (CLK,
     P_WIDTH = 11'd200,
     P_HEIGHT = 11'd200;
     
-    //??IP????65 MHZ
+    //IP core 65MHZ
     clk_vga_1024_768 clk_vga_inst(
     .clk_in1(CLK),
     .resetn(RST_N),

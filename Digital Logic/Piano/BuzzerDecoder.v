@@ -4,7 +4,7 @@ module BuzzerDecoder (input iClk,
                       //output oBuzzerEnable,
                       output [12:0]oFreq);
     
-    // iFreq: frequency type of the buzzer, from C#3 to B7, 60 in total
+    // iFreq: frequency type of the buzzer, 79 in total,1^-3 - 7^3, main 49keys , half 35keys
     // oBuzzerEnable: enable the buzzer
     // oFreq: frequency of the buzzer
     
@@ -171,11 +171,11 @@ module BuzzerDecoder (input iClk,
             frequency <= 1000000/3136;
             76: // G#7 3322
             frequency <= 1000000/3322;
-            77: // A7 3520
+            77: // A7 3520  6^3
             frequency <= 1000000/3520;
             78: // A#7 3729
             frequency <= 1000000/3729;
-            79: // B7 3951
+            79: // B7 3951  7^3
             frequency <= 1000000/3951;
             
             99: // stop
