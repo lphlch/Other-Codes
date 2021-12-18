@@ -47,8 +47,8 @@ module Ps2Decoder(
 									8'h3e:begin oData <= 44;end	//8
 									8'h46:begin oData <= 46;end	//9
 									8'h45:begin oData <= 48;end	//0
-									8'h4e:begin oData <= 49;end	//-
-									8'h55:begin oData <= 51;end	//=
+									//8'h4e:begin oData <= 49;end	//-
+									//8'h55:begin oData <= 51;end	//=
 									8'h66:begin oData <= 54;end	//backspace
 
 									//second line
@@ -92,7 +92,7 @@ module Ps2Decoder(
 									8'h3a:begin oData <= 7;end	//m
 									8'h41:begin oData <= 8;end	//,
 									8'h49:begin oData <= 10;end	//.
-									8'h4a:begin oData <= 12;end	///
+									//8'h4a:begin oData <= 12;end	///
 
 									//fifth line
 									8'h14:begin oData <= 30;end	//ctrl

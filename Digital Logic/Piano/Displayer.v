@@ -1,6 +1,7 @@
 module Displayer (input iClk,
                   input iReset_n,
-                  input [11:0] iRGB,
+                  input [7:0] iFreqType,
+                  //input [11:0] iRGB,
                   output reg oVGA_Hsync,
                   output reg oVGA_Vsync,
                   output [3:0] oVGA_Red,
@@ -115,7 +116,8 @@ module Displayer (input iClk,
      12 freq types per group
      
      */
-    
+
+
     parameter left_blanking        = 20;
     parameter top_blanking         = 200;
     parameter half_key_count       = 35;
@@ -129,26 +131,97 @@ module Displayer (input iClk,
     parameter ship_key1            = 3;
     parameter ship_key2            = 7;
     parameter keys_per_group       = 7;
+    parameter key_per_freq_group   = 12;
     parameter white                = 12'b111111111111;
     parameter black                = 12'b000000000000;
     parameter yellow               = 12'b111111110000;
     parameter blue                 = 12'b000000001111;
-    
+    parameter green                = 12'b000011110000;
     reg [7:0] main_keys,half_keys;
-    
+    reg [7:0] main_keys_number,half_keys_number;
+    always @(*) begin
+        if(iFreqType==0) begin
+            main_keys_number<=99;
+            half_keys_number<=99;
+        end
+        else if(iFreqType<=7) begin
+            main_keys_number <= iFreqType-1;
+            half_keys_number <= 99;
+        end
+        else begin
+            case ((iFreqType-7)%key_per_freq_group)
+                1: begin
+                    main_keys_number <= 7+(iFreqType-7)/key_per_freq_group*keys_per_group;
+                    half_keys_number <= 99;
+                end
+                2: begin
+                    main_keys_number <= 99;
+                    half_keys_number <= 8+(iFreqType-7)/key_per_freq_group*keys_per_group;
+                end
+                3: begin
+                    main_keys_number <= 8+(iFreqType-7)/key_per_freq_group*keys_per_group;
+                    half_keys_number <= 99;
+                end
+                4: begin
+                    main_keys_number <= 99;
+                    half_keys_number <= 9+(iFreqType-7)/key_per_freq_group*keys_per_group;
+                end
+                5: begin
+                    main_keys_number <= 9+(iFreqType-7)/key_per_freq_group*keys_per_group;
+                    half_keys_number <= 99;
+                end
+                6: begin
+                    main_keys_number <= 10+(iFreqType-7)/key_per_freq_group*keys_per_group;
+                    half_keys_number <= 99;
+                end
+                7: begin
+                    main_keys_number <= 99;
+                    half_keys_number <= 11+(iFreqType-7)/key_per_freq_group*keys_per_group;
+                end
+                8: begin
+                    main_keys_number <= 11+(iFreqType-7)/key_per_freq_group*keys_per_group;
+                    half_keys_number <= 99;
+                end
+                9: begin
+                    main_keys_number <= 99;
+                    half_keys_number <= 12+(iFreqType-7)/key_per_freq_group*keys_per_group;
+                end
+                10: begin
+                    main_keys_number <= 12+(iFreqType-7)/key_per_freq_group*keys_per_group;
+                    half_keys_number <= 99;
+                end
+                11: begin
+                    main_keys_number <= 99;
+                    half_keys_number <= 13+(iFreqType-7)/key_per_freq_group*keys_per_group;
+                end
+                0: begin
+                    main_keys_number <= 6+(iFreqType-7)/key_per_freq_group*keys_per_group;
+                    half_keys_number <= 99;
+                end
+                default: begin
+                    main_keys_number<=99;
+                    half_keys_number<=99;
+                end
+            endcase
+        end
+    end
+
     //display
     always @ (posedge clk_vga or negedge iReset_n)
     begin
+
         if (!iReset_n) begin
             rgb_vga   <= 0;
             main_keys <= 0;
             half_keys <= 0;
         end
         else begin
-            if (xpos_vga>left_blanking+blanking && ypos_vga>top_blanking)    //key area
-            begin
-                if (((xpos_vga-left_blanking) % main_key_width_total) > blanking && main_keys <main_key_count) begin  //main key
-                    rgb_vga <= white;
+
+            //key area
+            if (xpos_vga>left_blanking+blanking && ypos_vga>top_blanking &&ypos_vga-top_blanking<main_key_height) begin
+                if (((xpos_vga-left_blanking) % main_key_width_total) >= blanking && main_keys <main_key_count) begin  //main key
+                    if(main_keys==main_keys_number) rgb_vga <= green;
+                    else rgb_vga <= white;
                 end
                 else if (main_keys < main_key_count) begin
                     rgb_vga <= blue;
@@ -163,29 +236,31 @@ module Displayer (input iClk,
                         && (half_keys <= main_key_count)
                         && (half_keys % keys_per_group != 3)
                         && (half_keys % keys_per_group != 0)) begin
-                        rgb_vga <= yellow;
-                        end
-                        end
-                    
-                    if (((xpos_vga-left_blanking) % main_key_width_total) == 0) begin
-                        main_keys <= main_keys+1;  //count keys
-                    end
-                    
-                    if (((xpos_vga-left_blanking-half_key_offset) % half_key_width_total) == 0) begin
-                        half_keys <= half_keys+1;
+                        
+                        if(half_keys==half_keys_number) rgb_vga <= green;
+                        else rgb_vga <= yellow;
+
                     end
                 end
-                else
-                begin
-                    main_keys <= 0;
-                    half_keys <= 0;
                     
-                    rgb_vga <= 0;  //background
+                if (((xpos_vga-left_blanking) % main_key_width_total) == 0) begin
+                    main_keys <= main_keys+1;  //count keys
                 end
                 
-                
+                if (((xpos_vga-left_blanking-half_key_offset) % half_key_width_total) == 0) begin
+                    half_keys <= half_keys+1;
+                end
             end
+            else begin
+                main_keys <= 0;
+                half_keys <= 0;
+                
+                rgb_vga <= 0;  //background
+            end
+                
+                
         end
+    end
         
         
         

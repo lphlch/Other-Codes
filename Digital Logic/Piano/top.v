@@ -2,6 +2,11 @@ module top (input iClk,
             input iReset_n,
             input iPs2_Clk,
             input iPs2_Data,
+            output oVGA_Hsync,
+            output oVGA_Vsync,
+            output [3:0] oVGA_Red,
+            output [3:0] oVGA_Green,
+            output [3:0] oVGA_Blue,
             output oPWM,
             output oLightsRing
 /*             output oLightsFreq,
@@ -66,6 +71,18 @@ module top (input iClk,
         .iFreq(buzzer_Freq),
         .oNote(oPWM)
     ); 
+
+    Displayer displayer(
+        .iClk(iClk),
+        .iReset_n(iReset_n),
+        .iFreqType(freq_Data),
+        .oVGA_Hsync(oVGA_Hsync),
+        .oVGA_Vsync(oVGA_Vsync),
+        .oVGA_Red(oVGA_Red),
+        .oVGA_Green(oVGA_Green),
+        .oVGA_Blue(oVGA_Blue)
+    );
+
 /* 
     Lights lightsFreq(
         .iClk(iClk),
