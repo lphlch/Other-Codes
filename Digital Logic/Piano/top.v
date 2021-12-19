@@ -3,6 +3,9 @@ module top (input iClk,
             input iPs2_Clk,
             input iPs2_Data,
             input iSongSelect,
+            input [1:0] iControl_Progress,
+            input [2:0] iControl_Speed,
+            input [2:0] iControl_Freq,
             output oVGA_Hsync,
             output oVGA_Vsync,
             output [3:0] oVGA_Red,
@@ -17,7 +20,7 @@ module top (input iClk,
             output oLightBuzzerFreq */);
 
     wire buzzer_Ring_Enable,buzzer_Counter_Enable;
-    wire [12:0] buzzer_Freq;
+    wire [12:0] buzzer_Freq,progress;
     wire ps2_Flag,clk;
     wire [7:0] ps2_Data,ps2_Decoded_Data,song_Data,freq_Data;
     wire songSelector;
@@ -59,6 +62,10 @@ module top (input iClk,
         .iClk(clk),
         .iReset_n(iReset_n),
         .iEnable(iSongSelect),
+        .iControl_Progress(iControl_Progress),
+        .iControl_Speed(iControl_Speed),
+        .iControl_Freq(iControl_Freq),
+        .oProgress(progress),
         .oFreq(song_Data)
     );
 
