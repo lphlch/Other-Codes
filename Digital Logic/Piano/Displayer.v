@@ -1,6 +1,7 @@
 module Displayer (input iClk,
                   input iReset_n,
                   input [7:0] iFreqType,
+                  input [7:0] iProgress,
                   //input [11:0] iRGB,
                   output reg oVGA_Hsync,
                   output reg oVGA_Vsync,
@@ -116,8 +117,6 @@ module Displayer (input iClk,
      12 freq types per group
      
      */
-
-
     parameter left_blanking        = 20;
     parameter top_blanking         = 200;
     parameter half_key_count       = 35;
@@ -139,6 +138,14 @@ module Displayer (input iClk,
     parameter green                = 12'b000011110000;
     reg [7:0] main_keys,half_keys;
     reg [7:0] main_keys_number,half_keys_number;
+
+
+    /* progress bar */
+    parameter progress_top_blanking = 20;
+    parameter progress_left_blanking = 20;
+    parameter progress_height = 40;
+    parameter progress_width = 900;
+    // key mapping
     always @(*) begin
         if(iFreqType==0) begin
             main_keys_number<=99;
@@ -215,10 +222,27 @@ module Displayer (input iClk,
             main_keys <= 0;
             half_keys <= 0;
         end
-        else begin
+        else begin                
+            rgb_vga <= 0;  //background
+
+            //progress area
+            if(xpos_vga>progress_left_blanking
+             && ypos_vga>progress_top_blanking
+             && xpos_vga<=progress_left_blanking+progress_width
+             && ypos_vga<=progress_top_blanking+progress_height) begin
+                if(xpos_vga-progress_left_blanking<=progress_width/100*iProgress) begin
+                    rgb_vga <= yellow;
+                end
+                else begin
+                    rgb_vga <= green;
+                end
+
+            end
+
+
 
             //key area
-            if (xpos_vga>left_blanking+blanking && ypos_vga>top_blanking &&ypos_vga-top_blanking<main_key_height) begin
+            if (xpos_vga>left_blanking+blanking && ypos_vga>top_blanking && ypos_vga-top_blanking<main_key_height) begin
                 if (((xpos_vga-left_blanking) % main_key_width_total) >= blanking && main_keys <main_key_count) begin  //main key
                     if(main_keys==main_keys_number) rgb_vga <= green;
                     else rgb_vga <= white;
@@ -254,8 +278,6 @@ module Displayer (input iClk,
             else begin
                 main_keys <= 0;
                 half_keys <= 0;
-                
-                rgb_vga <= 0;  //background
             end
                 
                 

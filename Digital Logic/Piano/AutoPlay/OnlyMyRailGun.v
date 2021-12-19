@@ -4,13 +4,14 @@ module OnlyMyRailGun (input iClk,
                       input [1:0] iControl_Progress,
                       input [2:0] iControl_Speed,
                       input [2:0] iControl_Freq,
-                      output [7:0] oProgress,
+                      output reg [7:0] oProgress,
                       output reg [7:0] oFreq);
     
     parameter default_notes_speed = 135*4*4;    //notes every minutes = meter speed * notes per meter
     parameter notes_total = 600;
-    reg [20:0] note,count,notes_speed;
-    reg[7:0] freq,notes_offset;
+    reg signed [20:0] note,count,notes_speed;
+    reg [7:0] freq;
+    reg signed [4:0] notes_offset;
 
     always @(iControl_Speed) begin  //0.25 ~ 3 X speed
         if(!iReset_n || !iEnable) begin
@@ -54,17 +55,17 @@ module OnlyMyRailGun (input iClk,
             notes_offset <= 0;
         end
         else begin
-            if(notes_offset!=0) begin
+/*             if(notes_offset!=0) begin
                 notes_offset <= 0;
-            end
-            else begin
+            end */
+            /* else begin */
                 case (iControl_Progress)
                     2'b00: notes_offset <= 0;
                     2'b01: notes_offset <= 5;
                     2'b10: notes_offset <= -5;
                     default: notes_offset <= 0;
                 endcase
-            end
+            //end
         end
     end
 
@@ -74,6 +75,7 @@ module OnlyMyRailGun (input iClk,
             freq <= 0;
             note  <= 0;
             count <= 0;
+            oProgress<=0;
         end
         else begin
             if (iEnable) begin
@@ -85,7 +87,7 @@ module OnlyMyRailGun (input iClk,
                     count <= count+1;
                 end
 
-                if(note==notes_total) begin
+                if(note>=notes_total || note<0) begin
                     note <= 0;
                 end
                 
@@ -609,19 +611,16 @@ module OnlyMyRailGun (input iClk,
                 endcase
                 
                 
-                
-                
-                
-                
+                oProgress<=note*100/notes_total;        
             end
             else begin
                 count <= 0;
                 note  <= 0;
+                oProgress<=0;
             end
+
+            
         end
     end
 
-
-
-    assign oProgress=((iReset_n)?0:(note/notes_total));
 endmodule
