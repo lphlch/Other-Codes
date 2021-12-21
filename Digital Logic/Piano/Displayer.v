@@ -215,9 +215,9 @@ module Displayer (input iClk,
     end
 
     /* name of song */
-    parameter name_left_blanking = 300;
+    parameter name_left_blanking = 100;
     parameter name_top_blanking = 20;
-    parameter name_P_width = 500;
+    parameter name_P_width = 800;
     parameter name_P_height = 80;
     reg [16:0] name_addr;
     reg [15:0] name_dataO;
@@ -231,7 +231,7 @@ module Displayer (input iClk,
         .dina(0),    // input wire [15 : 0] dina
         .douta(tmp_dataO[0])  // output wire [15 : 0] douta
     );
-    blk_mem_gen_Only_my_railgun song1(
+    blk_mem_gen_SistersNoise song1(
         .clka(clk_vga),    // input wire clka
         .wea(0),      // input wire [0 : 0] wea
         .addra(name_addr),  // input wire [16 : 0] addra
@@ -247,7 +247,7 @@ module Displayer (input iClk,
             case (iSongSelected)
                 1: name_dataO<=tmp_dataO[0];
                 2: name_dataO<=tmp_dataO[1];
-                4: name_dataO<=tmp_dataO[0];
+                4: name_dataO<=tmp_dataO[2];
                 default: name_dataO<=0;
             endcase
         end

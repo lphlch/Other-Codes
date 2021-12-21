@@ -67,7 +67,7 @@ module BuzzerDecoder (input iClk,
             frequency <= 1000000/155;
             24:  // E3 164
             frequency <= 1000000/164;
-            25:  // F3 174
+            25:  // F3 174  4^-1
             frequency <= 1000000/174;
             26:  // F#3 185
             frequency <= 1000000/185;
