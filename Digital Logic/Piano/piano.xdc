@@ -98,7 +98,6 @@ set_property PACKAGE_PIN U11 [get_ports {iSongSelect[0]}]
 set_property IOSTANDARD LVCMOS33 [get_ports oLightsS0]
 set_property IOSTANDARD LVCMOS33 [get_ports oLightsS1]
 set_property PACKAGE_PIN V12 [get_ports oLightsS0]
-set_property PACKAGE_PIN V14 [get_ports oLightsS1]
 
 
 set_property PACKAGE_PIN H17 [get_ports oLightsRing]
@@ -106,3 +105,5 @@ set_property PACKAGE_PIN H17 [get_ports oLightsRing]
 
 set_property IOSTANDARD LVCMOS33 [get_ports oLightsRing]
 
+
+set_property PACKAGE_PIN V14 [get_ports oLightsS1]

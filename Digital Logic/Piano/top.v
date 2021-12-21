@@ -168,14 +168,14 @@ module top (input iClk,
         .iClk(iClk),
         .iReset_n(iReset_n),
         .iEnable(iSongSelect[0]),
-        .oLights(oLightS0)
+        .oLights(oLightsS0)
     );
     
     Lights2 song1L(
         .iClk(iClk),
         .iReset_n(iReset_n),
         .iEnable(iSongSelect[1]),
-        .oLights(oLightS1)
+        .oLights(oLightsS0)
     );
 
 /*     Lights3 lightBUzzerFreq(
