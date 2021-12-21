@@ -2,6 +2,7 @@ module Displayer (input iClk,
                   input iReset_n,
                   input [7:0] iFreqType,
                   input [7:0] iProgress,
+                  input [3:0] iSongSelected,
                   //input [11:0] iRGB,
                   output reg oVGA_Hsync,
                   output reg oVGA_Vsync,
@@ -141,7 +142,7 @@ module Displayer (input iClk,
 
 
     /* progress bar */
-    parameter progress_top_blanking = 20;
+    parameter progress_top_blanking = 120;
     parameter progress_left_blanking = 20;
     parameter progress_height = 40;
     parameter progress_width = 900;
@@ -213,6 +214,46 @@ module Displayer (input iClk,
         end
     end
 
+    /* name of song */
+    parameter name_left_blanking = 300;
+    parameter name_top_blanking = 20;
+    parameter name_P_width = 500;
+    parameter name_P_height = 80;
+    reg [16:0] name_addr;
+    reg [15:0] name_dataO;
+    wire [15:0] tmp_dataO[3:0];
+
+    //built-in name picture
+    blk_mem_gen_Only_my_railgun song0(
+        .clka(clk_vga),    // input wire clka
+        .wea(0),      // input wire [0 : 0] wea
+        .addra(name_addr),  // input wire [16 : 0] addra
+        .dina(0),    // input wire [15 : 0] dina
+        .douta(tmp_dataO[0])  // output wire [15 : 0] douta
+    );
+    blk_mem_gen_Only_my_railgun song1(
+        .clka(clk_vga),    // input wire clka
+        .wea(0),      // input wire [0 : 0] wea
+        .addra(name_addr),  // input wire [16 : 0] addra
+        .dina(0),    // input wire [15 : 0] dina
+        .douta(tmp_dataO[1])  // output wire [15 : 0] douta
+    );
+
+    always @(*) begin
+        if (!iReset_n) begin
+            name_dataO<=0;
+        end
+        else begin 
+            case (iSongSelected)
+                1: name_dataO<=tmp_dataO[0];
+                2: name_dataO<=tmp_dataO[1];
+                4: name_dataO<=tmp_dataO[0];
+                default: name_dataO<=0;
+            endcase
+        end
+    end
+
+
     //display
     always @ (posedge clk_vga or negedge iReset_n)
     begin
@@ -221,9 +262,12 @@ module Displayer (input iClk,
             rgb_vga   <= 0;
             main_keys <= 0;
             half_keys <= 0;
+            name_addr <= 0;
         end
         else begin                
             rgb_vga <= 0;  //background
+
+
 
             //progress area
             if(xpos_vga>progress_left_blanking
@@ -239,7 +283,19 @@ module Displayer (input iClk,
 
             end
 
+            //name area
+            if(name_addr>17'b11111111111111111 || ypos_vga==0) begin
+                name_addr<=0;
+            end
 
+            if(xpos_vga>name_left_blanking
+             && ypos_vga>name_top_blanking
+             && xpos_vga<=name_left_blanking+name_P_width
+             && ypos_vga<=name_top_blanking+name_P_height) begin
+                rgb_vga <= name_dataO;
+                name_addr<=name_addr+1;
+            end
+            
 
             //key area
             if (xpos_vga>left_blanking+blanking && ypos_vga>top_blanking && ypos_vga-top_blanking<main_key_height) begin

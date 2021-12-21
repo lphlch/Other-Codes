@@ -2,7 +2,7 @@ module top (input iClk,
             input iReset_n,
             input iPs2_Clk,
             input iPs2_Data,
-            input iSongSelect,
+            input [1:0] iSongSelect,
             input [1:0] iControl_Progress,
             input [2:0] iControl_Speed,
             input [2:0] iControl_Freq,
@@ -12,7 +12,9 @@ module top (input iClk,
             output [3:0] oVGA_Green,
             output [3:0] oVGA_Blue,
             output oPWM,
-            output oLightsRing
+            output oLightsRing,
+            output oLightsS0,
+            output oLightsS1
 /*             output oLightsFreq,
             output oLightsRing,
             output oLightCounter,
@@ -20,10 +22,10 @@ module top (input iClk,
             output oLightBuzzerFreq */);
 
     wire buzzer_Ring_Enable,buzzer_Counter_Enable;
-    wire [12:0] buzzer_Freq,progress;
+    wire [12:0] buzzer_Freq,progress[3:0],playing_progress;
     wire ps2_Flag,clk;
-    wire [7:0] ps2_Data,ps2_Decoded_Data,song_Data,freq_Data;
-    wire songSelector;
+    wire [7:0] ps2_Data,ps2_Decoded_Data,song_Data[3:0],freq_Data,playing_song_Data;
+    wire [3:0] songSelector;
 
 	Frenp frep_dut(
 		.iClk(iClk),
@@ -52,24 +54,56 @@ module top (input iClk,
         .iClk(clk),
         .iReset_n(iReset_n),
         .iPs2_Data(ps2_Decoded_Data),
-        .iSong_Data(song_Data),
+        .iSong_Data(playing_song_Data),
         .iSongSelect(iSongSelect),
         .oFreq_Data(freq_Data),
-        .oCountEnable(buzzer_Counter_Enable)
+        .oCountEnable(buzzer_Counter_Enable),
+        .oSongSelectSeq(songSelector)
     ); 
 
-    OnlyMyRailGun song1(
+    OnlyMyRailGun song0(
         .iClk(clk),
         .iReset_n(iReset_n),
-        .iEnable(iSongSelect),
+        .iEnable(songSelector[0]),
         .iControl_Progress(iControl_Progress),
         .iControl_Speed(iControl_Speed),
         .iControl_Freq(iControl_Freq),
-        .oProgress(progress),
-        .oFreq(song_Data)
+        .oProgress(progress[0]),
+        .oFreq(song_Data[0])
     );
 
-     BuzzerDecoder buzzerDecoder(
+    SistersNoise song1(
+        .iClk(clk),
+        .iReset_n(iReset_n),
+        .iEnable(songSelector[1]),
+        .iControl_Progress(iControl_Progress),
+        .iControl_Speed(iControl_Speed),
+        .iControl_Freq(iControl_Freq),
+        .oProgress(progress[1]),
+        .oFreq(song_Data[1])
+    );
+
+    Selector selectSongData(
+        .iClk(clk),
+        .iReset_n(iReset_n),
+        .iData1(song_Data[0]),
+        .iData2(song_Data[1]),
+        .iData3(song_Data[2]),
+        .iAddress(songSelector),
+        .oData(playing_song_Data)
+    );
+    Selector selectProgressData(
+        .iClk(clk),
+        .iReset_n(iReset_n),
+        .iData1(progress[0]),
+        .iData2(progress[1]),
+        .iData3(progress[2]),
+        .iAddress(songSelector),
+        .oData(playing_progress)
+    );
+
+
+    BuzzerDecoder buzzerDecoder(
         .iClk(clk),
         .iReset_n(iReset_n),
         .iFreqType(freq_Data),
@@ -95,7 +129,7 @@ module top (input iClk,
         .iClk(iClk),
         .iReset_n(iReset_n),
         .iFreqType(freq_Data),
-        .iProgress(progress),
+        .iProgress(playing_progress),
         .oVGA_Hsync(oVGA_Hsync),
         .oVGA_Vsync(oVGA_Vsync),
         .oVGA_Red(oVGA_Red),
@@ -117,26 +151,26 @@ module top (input iClk,
         .iEnable(buzzer_Ring_Enable),
         .oLights(oLightsRing)
     );
-/*
-    Lights2 lightCounter(
+
+    Lights2 song0L(
         .iClk(iClk),
         .iReset_n(iReset_n),
-        .iEnable(buzzer_Counter_Enable),
-        .oLights(oLightCounter)
+        .iEnable(songSelector[0]),
+        .oLights(oLightS0)
     );
     
-    Lights2 lightNote(
+    Lights2 song1L(
         .iClk(iClk),
         .iReset_n(iReset_n),
-        .iEnable(oPWM),
-        .oLights(oLightPWM)
+        .iEnable(songSelector[1]),
+        .oLights(oLightS1)
     );
 
-    Lights3 lightBUzzerFreq(
+/*     Lights3 lightBUzzerFreq(
         .iClk(iClk),
         .iReset_n(iReset_n),
         .iEnable(buzzer_Freq),
         .oLights(oLightBuzzerFreq)
-    ); */
+    );  */
 
 endmodule
