@@ -14,7 +14,9 @@ module top (input iClk,
             output oPWM,
             output oLightsRing,
             output oLightsS0,
-            output oLightsS1
+            output oLightsS1,
+            output [7:0] oSeg_LED,
+            output [7:0] oSeg_An
 /*             output oLightsFreq,
             output oLightsRing,
             output oLightCounter,
@@ -130,11 +132,21 @@ module top (input iClk,
         .iReset_n(iReset_n),
         .iFreqType(freq_Data),
         .iProgress(playing_progress),
+        .iSongSelected(songSelector),
         .oVGA_Hsync(oVGA_Hsync),
         .oVGA_Vsync(oVGA_Vsync),
         .oVGA_Red(oVGA_Red),
         .oVGA_Green(oVGA_Green),
         .oVGA_Blue(oVGA_Blue)
+    );
+
+    Seg8 seg8(
+        .iClk(iClk),
+        .iReset_n(iReset_n),
+        .iControl_Speed(iControl_Speed),
+        .iControl_Freq(iControl_Freq),
+        .oSeg(oSeg_LED),
+        .oAn(oSeg_An)
     );
 
 /* 
@@ -155,14 +167,14 @@ module top (input iClk,
     Lights2 song0L(
         .iClk(iClk),
         .iReset_n(iReset_n),
-        .iEnable(songSelector[0]),
+        .iEnable(iSongSelect[0]),
         .oLights(oLightS0)
     );
     
     Lights2 song1L(
         .iClk(iClk),
         .iReset_n(iReset_n),
-        .iEnable(songSelector[1]),
+        .iEnable(iSongSelect[1]),
         .oLights(oLightS1)
     );
 
