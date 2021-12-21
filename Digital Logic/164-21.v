@@ -1,52 +1,34 @@
 module ztj (input clk,
             input rst,
-            input y);
-    reg[2:0] status;
+            input k);
+    reg[1:0] status;
+    parameter S0 = 2'b00,S1 = 2'b01,S2 = 2'b10,S3 = 2'b11 ;
     always @(posedge clk) begin
+        
         if (rst) begin
-            status <= 0;
+            status <= S0;
         end
         else begin
-            
             case (status)
-                3'b000:begin
-                    if (y == 0) status < = 3'b100;
-                    if (y == 1) status < = 3'b001;
+                S0: begin
+                    if (k == 1) status< = S0;
+                    if (k == 0) status< = S1;
                 end
-                3'b001:begin
-                    if (y == 0) status < = 3'b000;
-                    if (y == 1) status < = 3'b011;
+                S1: begin
+                    if (k == 1) status< = S2;
+                    if (k == 0) status< = S1;
                 end
-                3'b011:begin
-                    if (y == 0) status < = 3'b001;
-                    if (y == 1) status < = 3'b010;
+                S2: begin
+                    if (k == 1) status< = S2;
+                    if (k == 0) status< = S3;
                 end
-                3'b010:begin
-                    if (y == 0) status < = 3'b011;
-                    if (y == 1) status < = 3'b110;
+                S3: begin
+                    if (k == 1) status< = S0;
+                    if (k == 0) status< = S3;
                 end
-                3'b110:begin
-                    if (y == 0) status < = 3'b010;
-                    if (y == 1) status < = 3'b111;
-                end
-                3'b111:begin
-                    if (y == 0) status < = 3'b110;
-                    if (y == 1) status < = 3'b101;
-                end
-                3'b101:begin
-                    if (y == 0) status < = 3'b111;
-                    if (y == 1) status < = 3'b100;
-                end
-                3'b100:begin
-                    if (y == 0) status < = 3'b101;
-                    if (y == 1) status < = 3'b000;
-                end
-                default: status <= status;
+                default: state <= state;
             endcase
-            
         end
+        
     end
-
 endmodule
-    
-    
