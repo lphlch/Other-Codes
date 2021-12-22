@@ -11,7 +11,7 @@ module Lights (input iClk,
         end
         else
         begin
-            oLights = (iEnable==0 || iEnable==99)? 0 : 1;
+            oLights <= (iEnable==0 || iEnable==99)? 0 : 1;
         end
     end
 endmodule
@@ -29,7 +29,7 @@ module Lights2 (input iClk,
         end
         else
         begin
-            oLights = (iEnable==0)? 0 : 1;
+            oLights <= (iEnable==0)? 0 : 1;
         end
     end
 endmodule
@@ -47,7 +47,7 @@ module Lights3 (input iClk,
         end
         else
         begin
-            oLights = (iEnable==0)? 0 : 1;
+            oLights <= (iEnable==0)? 0 : 1;
         end
     end
 endmodule

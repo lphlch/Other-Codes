@@ -118,14 +118,14 @@ module Displayer (input iClk,
      12 freq types per group
      
      */
-    parameter left_blanking        = 20;
-    parameter top_blanking         = 200;
+    parameter left_blanking        = 45;
+    parameter top_blanking         = 400;
     parameter half_key_count       = 35;
-    parameter half_key_height      = 80;
+    parameter half_key_height      = 100;
     parameter half_key_width_total = 19;
     parameter half_key_offset      = 9;
     parameter main_key_count       = 49;
-    parameter main_key_height      = 160;
+    parameter main_key_height      = 300;
     parameter main_key_width_total = 19;
     parameter blanking             = 5;
     parameter ship_key1            = 3;
@@ -137,14 +137,15 @@ module Displayer (input iClk,
     parameter yellow               = 12'b111111110000;
     parameter blue                 = 12'b000000001111;
     parameter green                = 12'b000011110000;
+    parameter red                  = 12'b111100000000;
     reg [7:0] main_keys,half_keys;
     reg [7:0] main_keys_number,half_keys_number;
 
 
     /* progress bar */
-    parameter progress_top_blanking = 120;
-    parameter progress_left_blanking = 20;
-    parameter progress_height = 40;
+    parameter progress_top_blanking = 230;
+    parameter progress_left_blanking = 50;
+    parameter progress_height = 60;
     parameter progress_width = 900;
     // key mapping
     always @(*) begin
@@ -216,7 +217,7 @@ module Displayer (input iClk,
 
     /* name of song */
     parameter name_left_blanking = 100;
-    parameter name_top_blanking = 20;
+    parameter name_top_blanking = 50;
     parameter name_P_width = 800;
     parameter name_P_height = 80;
     reg [16:0] name_addr;
@@ -224,19 +225,26 @@ module Displayer (input iClk,
     wire [15:0] tmp_dataO[3:0];
 
     //built-in name picture
-    blk_mem_gen_Only_my_railgun song0(
+    blk_mem_gen_freePlay free(
         .clka(clk_vga),    // input wire clka
         .wea(0),      // input wire [0 : 0] wea
         .addra(name_addr),  // input wire [16 : 0] addra
         .dina(0),    // input wire [15 : 0] dina
         .douta(tmp_dataO[0])  // output wire [15 : 0] douta
     );
-    blk_mem_gen_SistersNoise song1(
+    blk_mem_gen_Only_my_railgun song0(
         .clka(clk_vga),    // input wire clka
         .wea(0),      // input wire [0 : 0] wea
         .addra(name_addr),  // input wire [16 : 0] addra
         .dina(0),    // input wire [15 : 0] dina
         .douta(tmp_dataO[1])  // output wire [15 : 0] douta
+    );
+    blk_mem_gen_SistersNoise song1(
+        .clka(clk_vga),    // input wire clka
+        .wea(0),      // input wire [0 : 0] wea
+        .addra(name_addr),  // input wire [16 : 0] addra
+        .dina(0),    // input wire [15 : 0] dina
+        .douta(tmp_dataO[2])  // output wire [15 : 0] douta
     );
 
     always @(*) begin
@@ -245,9 +253,10 @@ module Displayer (input iClk,
         end
         else begin 
             case (iSongSelected)
-                1: name_dataO<=tmp_dataO[0];
-                2: name_dataO<=tmp_dataO[1];
-                4: name_dataO<=tmp_dataO[2];
+                0:name_dataO<=tmp_dataO[0];
+                1: name_dataO<=tmp_dataO[1];
+                2: name_dataO<=tmp_dataO[2];
+                4: name_dataO<=tmp_dataO[3];
                 default: name_dataO<=0;
             endcase
         end
@@ -273,12 +282,13 @@ module Displayer (input iClk,
             if(xpos_vga>progress_left_blanking
              && ypos_vga>progress_top_blanking
              && xpos_vga<=progress_left_blanking+progress_width
-             && ypos_vga<=progress_top_blanking+progress_height) begin
+             && ypos_vga<=progress_top_blanking+progress_height
+             && iSongSelected!=0) begin
                 if(xpos_vga-progress_left_blanking<=progress_width/100*iProgress) begin
-                    rgb_vga <= yellow;
+                    rgb_vga <= green;
                 end
                 else begin
-                    rgb_vga <= green;
+                    rgb_vga <= red;
                 end
 
             end

@@ -107,3 +107,6 @@ set_property IOSTANDARD LVCMOS33 [get_ports oLightsRing]
 
 
 set_property PACKAGE_PIN V14 [get_ports oLightsS1]
+
+set_property IOSTANDARD LVCMOS33 [get_ports oLightsPower]
+set_property PACKAGE_PIN V11 [get_ports oLightsPower]

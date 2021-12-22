@@ -13,6 +13,7 @@ module top (input iClk,
             output [3:0] oVGA_Blue,
             output oPWM,
             output oLightsRing,
+            output oLightsPower,
             output oLightsS0,
             output oLightsS1,
             output [7:0] oSeg_LED,
@@ -157,6 +158,13 @@ module top (input iClk,
         .oLights(oLightsFreq)
     );
 */
+    Lights2 lightsPower(
+        .iClk(clk),
+        .iReset_n(iReset_n),
+        .iEnable(iReset_n),
+        .oLights(oLightsPower)
+    );
+
     Lights2 lightsRing(
         .iClk(clk),
         .iReset_n(iReset_n),
@@ -175,7 +183,7 @@ module top (input iClk,
         .iClk(iClk),
         .iReset_n(iReset_n),
         .iEnable(iSongSelect[1]),
-        .oLights(oLightsS0)
+        .oLights(oLightsS1)
     );
 
 /*     Lights3 lightBUzzerFreq(

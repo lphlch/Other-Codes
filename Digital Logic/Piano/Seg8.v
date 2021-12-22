@@ -63,16 +63,17 @@ module Seg8(input iClk,
             case (position)
                 0:begin
                     case (iControl_Speed)
-                        1,4: oSeg         <= 8'b00100101; //5
-                        0,2,3,5,6,7: oSeg <= 8'b10000001; //0
+                        1,3: oSeg         <= 8'b00100101; //5
+                        0,2,4,5,6,7: oSeg <= 8'b10000001; //0
                         default: oSeg     <= 8'b11111111;
                     endcase
                 end
                 1:begin
                     case (iControl_Speed)
                         2,5: oSeg     <= 8'b00100101; //5
-                        1,4: oSeg     <= 8'b01001001; //2
-                        0,3,6,7: oSeg <= 8'b10000001; //0
+                        1: oSeg     <= 8'b01001001; //2
+                        0,4,6,7: oSeg <= 8'b10000001; //0
+                        3:oSeg <= 8'b11110001; //7
                         default: oSeg <= 8'b11111111;
                     endcase
                 end
@@ -80,8 +81,8 @@ module Seg8(input iClk,
                     case (iControl_Speed)
                         6: oSeg       <= 8'b01001000; //2.
                         7: oSeg       <= 8'b01100000; //3.
-                        3,4,5,0: oSeg <= 8'b11110010; //1.
-                        1,2: oSeg     <= 8'b10000000; //0.
+                        4,5,0: oSeg <= 8'b11110010; //1.
+                        1,2,3: oSeg     <= 8'b10000000; //0.
                         default: oSeg <= 8'b11111111;
                     endcase
                 end
