@@ -36,7 +36,22 @@ module Ps2Decoder(
 				casex (temp)
 					{8'hf0,8'hxx} : begin oData <=99; end    //when release, stop
 					default :case(temp[7:0])
+									//F
+									8'h05:begin oData <= 33;end //F1
+									8'h06:begin oData <= 35;end //F2
+									8'h04:begin oData <= 38;end //F3
+									8'h0c:begin oData <= 40;end //F4
+									8'h03:begin oData <= 42;end //F5
+									8'h0b:begin oData <= 45;end //F6
+									8'h83:begin oData <= 47;end //F7
+									8'h0a:begin oData <= 50;end //F8
+									8'h01:begin oData <= 52;end //F9
+									8'h09:begin oData <= 54;end //F10
+									8'h78:begin oData <= 57;end //F11
+									8'h07:begin oData <= 59;end //F12
+
 									//first line
+									8'h0e:begin oData <= 29;end //tap
 									8'h16:begin oData <= 32;end	//1
 									8'h1e:begin oData <= 34;end	//2
 									8'h26:begin oData <= 36;end	//3
