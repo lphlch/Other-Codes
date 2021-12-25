@@ -247,6 +247,20 @@ module Displayer (input iClk,
         .douta(tmp_dataO[2])  // output wire [15 : 0] douta
     );
 
+    parameter keyboard_left_blanking = 170;
+    parameter keyboard_top_blanking = 130;
+    parameter keyboard_width = 682;
+    parameter keyboard_height = 271;
+    reg [17:0] keyboard_addr;
+    wire [15:0] keyboard_dataO;
+    blk_mem_gen_Keyboard keyboard(
+        .clka(clk_vga),    // input wire clka
+        .wea(0),      // input wire [0 : 0] wea
+        .addra(keyboard_addr),  // input wire [17 : 0] addra
+        .dina(0),    // input wire [15 : 0] dina
+        .douta(keyboard_dataO)  // output wire [15 : 0] douta
+    );
+
     always @(*) begin
         if (!iReset_n) begin
             name_dataO<=0;
@@ -272,6 +286,7 @@ module Displayer (input iClk,
             main_keys <= 0;
             half_keys <= 0;
             name_addr <= 0;
+            keyboard_addr<=0;
         end
         else begin                
             rgb_vga <= 0;  //background
@@ -291,6 +306,16 @@ module Displayer (input iClk,
                     rgb_vga <= red;
                 end
 
+            end
+
+            //keyboard area
+            if(xpos_vga>keyboard_left_blanking
+            && ypos_vga>keyboard_top_blanking
+            && xpos_vga<=keyboard_left_blanking+keyboard_width
+            && ypos_vga<=keyboard_top_blanking+keyboard_height
+            && iSongSelected==0) begin
+                rgb_vga <= keyboard_dataO;
+                keyboard_addr<=keyboard_addr+1;
             end
 
             //name area
@@ -352,7 +377,7 @@ module Displayer (input iClk,
         
         
         
-        //????
+        //RGB mapping
         assign oVGA_Red   = rgb_vga[11:8];
         assign oVGA_Green = rgb_vga[7:4];
         assign oVGA_Blue  = rgb_vga[3:0];
