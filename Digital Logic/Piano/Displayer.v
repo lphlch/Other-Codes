@@ -14,21 +14,17 @@ module Displayer (input iClk,
     wire clk_vga;  //65MHZ
     
     // Horizontal Parameter(Pixel)
-    parameter
-    H_DISP = 11'd1024,
-    H_FRONT = 11'd24,
-    H_SYNC = 11'd136,
-    H_BACK = 11'd160,
-    H_TOTAL = 11'd1344,
+    parameter H_DISP = 11'd1024;
+    parameter H_FRONT = 11'd24;
+    parameter H_SYNC = 11'd136;
+    parameter H_BACK = 11'd160;
+    parameter H_TOTAL = 11'd1344;
     // Virtical Parameter(Line)
-    V_DISP = 11'd768,
-    V_FRONT = 11'd3,
-    V_SYNC = 11'd6,
-    V_BACK = 11'd29,
-    V_TOTAL = 11'd806,
-    // Picture Parameter
-    P_WIDTH = 11'd200,
-    P_HEIGHT = 11'd200;
+    parameter V_DISP = 11'd768;
+    parameter V_FRONT = 11'd3;
+    parameter V_SYNC = 11'd6;
+    parameter V_BACK = 11'd29;
+    parameter V_TOTAL = 11'd806;
     
     //IP core 65MHZ
     clk_vga_1024_768 clk_vga_inst(
@@ -86,7 +82,7 @@ module Displayer (input iClk,
             else
                 vcnt <= vcnt;
         end
-        $display("iReset_n = %d,hcnt = %d ,vcnt = %d", iReset_n,hcnt,vcnt);
+        //$display("iReset_n = %d,hcnt = %d ,vcnt = %d", iReset_n,hcnt,vcnt);
     end
     
     //vsync
@@ -105,8 +101,8 @@ module Displayer (input iClk,
     
     //x y
     wire [10:0] xpos_vga, ypos_vga;
-    assign xpos_vga = (hcnt < H_DISP) ? (hcnt + 1'b1) : 11'd0;  //??? + 1??1~H_DISP?
-    assign ypos_vga = (vcnt < V_DISP) ? (vcnt + 1'b1) : 11'd0;  //??? + 1??1~V_DISP?
+    assign xpos_vga = (hcnt < H_DISP) ? (hcnt + 1'b1) : 11'd0;
+    assign ypos_vga = (vcnt < V_DISP) ? (vcnt + 1'b1) : 11'd0;
     
     /* 79 in total,1^-3 - 7^3, main 49keys , half 35keys
      1024*768
@@ -116,7 +112,6 @@ module Displayer (input iClk,
      if half key == 3 or 7 ,do not display
      from 8, 8 = C2,9 = C#2,11 = D#2,14 = F#2,16 = G#2,18 = A#2,19 = B2
      12 freq types per group
-     
      */
     parameter left_blanking        = 45;
     parameter top_blanking         = 400;
@@ -132,12 +127,14 @@ module Displayer (input iClk,
     parameter ship_key2            = 7;
     parameter keys_per_group       = 7;
     parameter key_per_freq_group   = 12;
+    /* colour */
     parameter white                = 12'b111111111111;
     parameter black                = 12'b000000000000;
     parameter yellow               = 12'b111111110000;
     parameter blue                 = 12'b000000001111;
     parameter green                = 12'b000011110000;
     parameter red                  = 12'b111100000000;
+
     reg [7:0] main_keys,half_keys;
     reg [7:0] main_keys_number,half_keys_number;
 
@@ -147,6 +144,7 @@ module Displayer (input iClk,
     parameter progress_left_blanking = 50;
     parameter progress_height = 60;
     parameter progress_width = 900;
+
     // key mapping
     always @(*) begin
         if(iFreqType==0) begin
@@ -222,7 +220,7 @@ module Displayer (input iClk,
     parameter name_P_height = 80;
     reg [16:0] name_addr;
     reg [15:0] name_dataO;
-    wire [15:0] tmp_dataO[3:0];
+    wire [15:0] tmp_dataO[3:0]; //data to be selected
 
     //built-in name picture
     blk_mem_gen_freePlay free(
@@ -246,7 +244,7 @@ module Displayer (input iClk,
         .dina(0),    // input wire [15 : 0] dina
         .douta(tmp_dataO[2])  // output wire [15 : 0] douta
     );
-
+    //data selection
     always @(*) begin
         if (!iReset_n) begin
             name_dataO<=0;
@@ -262,7 +260,6 @@ module Displayer (input iClk,
         end
     end
 
-
     //display
     always @ (posedge clk_vga or negedge iReset_n)
     begin
@@ -275,8 +272,6 @@ module Displayer (input iClk,
         end
         else begin                
             rgb_vga <= 0;  //background
-
-
 
             //progress area
             if(xpos_vga>progress_left_blanking
@@ -292,6 +287,7 @@ module Displayer (input iClk,
                 end
 
             end
+
 
             //name area
             if(name_addr>17'b11111111111111111 || ypos_vga==0) begin
@@ -352,7 +348,7 @@ module Displayer (input iClk,
         
         
         
-        //????
+        //RGB map
         assign oVGA_Red   = rgb_vga[11:8];
         assign oVGA_Green = rgb_vga[7:4];
         assign oVGA_Blue  = rgb_vga[3:0];

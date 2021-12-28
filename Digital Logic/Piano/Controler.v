@@ -14,7 +14,6 @@ module Controler (input iClk,
     //oCountEnable: enable counter when ps2_data output
     //oSongSelectSeq: select song, only 1 bit is 1
 
-    //reg signed [4:0] songs;
     always @(posedge iClk or negedge iReset_n)
     begin
         if (!iReset_n)
@@ -57,17 +56,8 @@ module Controler (input iClk,
                 songs<=0;
             end
         end
-            
-
-        
     end
     
     assign oSongSelectSeq = songs;
     assign oFreq_Data = (songs>0)?iSong_Data:iPs2_Data;
-    
-    
-    
-    
-    
-    
 endmodule
