@@ -5,7 +5,7 @@ module Ps2Input(input iClk,
                 output reg oFlag,
                 output [7:0] oData);
     
-    wire  ng;
+    wire  isNegative;
     
     reg	[1:0] sign;
     always @ (posedge iClk or negedge iReset_n) begin
@@ -19,10 +19,10 @@ module Ps2Input(input iClk,
             sign[1] <= sign[0];
         end
     end
-    assign ng = ~sign[0] && sign[1];
+    assign isNegative = ~sign[0] && sign[1];
     
     reg [3:0] count;
-    reg [10:0] temp ;
+    reg [10:0] temp;
     
     assign oData = temp[8:1];
     
@@ -35,7 +35,7 @@ module Ps2Input(input iClk,
         end
         else
         begin
-            if (ng && count < 11)
+            if (isNegative && count < 11)
             begin
                 count       <= count + 1'd1;
                 temp[count] <= iPs2_Data;
