@@ -1,11 +1,13 @@
-module OnlyMyRailGun (input iClk,
-                      input iReset_n,
-                      input iEnable,
-                      input [1:0] iControl_Progress,
-                      input [2:0] iControl_Speed,
-                      input [2:0] iControl_Freq,
-                      output reg [7:0] oProgress,
-                      output reg [7:0] oFreq);
+/*Coded song module. Can control the warp speed, tune, playback progress. Will automatically play and output the corresponding notes.*/
+module OnlyMyRailGun (input iClk,   //clock
+                      input iReset_n,   //reset signal, active low
+                      input iEnable,    //enable signal, active high
+                      input [1:0] iControl_Progress,    //control signal of fast forward and fast rewind
+                      input [2:0] iControl_Speed,   //control signal of speed
+                      input [2:0] iControl_Freq,    //control signal of frequency
+                      output reg [7:0] oProgress,   //playing progress  (0-100)
+                      output reg [7:0] oFreq    //playing note frequency
+                      );
     
     parameter default_notes_speed = 135*4*4;    //notes every minutes = meter speed * notes per meter
     parameter notes_total         = 600;

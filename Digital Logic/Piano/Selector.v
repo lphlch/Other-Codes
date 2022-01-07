@@ -1,13 +1,12 @@
-module Selector (input iClk,
-                 input iReset_n,
-                 input [7:0]iData1,
-                 input [7:0]iData2,
-                 input [7:0]iData3,
+module Selector (input iClk,    //clock
+                 input iReset_n,    //reset signal, active low
+                 input [7:0]iData1, //data1
+                 input [7:0]iData2, //data2
+                 input [7:0]iData3, //data3
                  
-                 input [3:0] iAddress,
-                 output reg [7:0]oData);
-
-    // iAddress: 0=not play built-in song
+                 input [3:0] iAddress,  //address
+                 output reg [7:0]oData  //output data
+                 );
 
     always @(posedge iClk or negedge iReset_n) begin
         if (!iReset_n) begin

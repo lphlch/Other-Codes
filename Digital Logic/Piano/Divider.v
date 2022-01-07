@@ -1,6 +1,7 @@
-module Frenp(input iClk,
-             input iReset_n,
-             output reg oClk);
+module Divider(input iClk,  //orignal clock
+             input iReset_n,    //reset signal, active low
+             output reg oClk    //divided clock
+             );
     
     reg [4:0] count;
     
@@ -12,7 +13,7 @@ module Frenp(input iClk,
         end
         else
         begin
-            if (count == 50000000 / 1000000 / 2 - 1)
+            if (count == 25 - 1)
             begin
                 count  <= 0;
                 oClk <= ~oClk;

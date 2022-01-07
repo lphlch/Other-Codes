@@ -1,14 +1,14 @@
-module Displayer (input iClk,
-                  input iReset_n,
-                  input [7:0] iFreqType,
-                  input [7:0] iProgress,
-                  input [3:0] iSongSelected,
-                  //input [11:0] iRGB,
-                  output reg oVGA_Hsync,
-                  output reg oVGA_Vsync,
-                  output [3:0] oVGA_Red,
-                  output [3:0] oVGA_Green,
-                  output [3:0] oVGA_Blue);
+module Displayer (input iClk,   //clock
+                  input iReset_n,   //reset signal, active low
+                  input [7:0] iFreqType,  //frequency type
+                  input [7:0] iProgress,    //progress of built-in song
+                  input [3:0] iSongSelected,    //selected song
+                  output reg oVGA_Hsync,    //vga hsync
+                  output reg oVGA_Vsync,    //vga vsync
+                  output [3:0] oVGA_Red,    //vga red signal
+                  output [3:0] oVGA_Green,  //vga green signal
+                  output [3:0] oVGA_Blue    //vga blue signal
+                  );
     
     reg [11:0] rgb_vga;
     wire clk_vga;  //65MHZ

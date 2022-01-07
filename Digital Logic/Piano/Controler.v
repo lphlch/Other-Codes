@@ -1,18 +1,14 @@
-module Controler (input iClk,
-                  input iReset_n,
-                  input [7:0] iPs2_Data,
-                  input [7:0] iSong_Data,
-                  input [2:0] iSongSelect,
-                  output [7:0] oFreq_Data,
-                  output reg oCountEnable,
-                  output reg signed [4:0] songs,
-                  output [3:0] oSongSelectSeq);
-    //iPs2_Data: keyboard data after decoded, if 99, stop playing note after a cycle
-    //iSong_Data: built-in song data, output to oFreq_Data if songs >0
-    //iSongSelect: button 01: prev song, 10: next song
-    //oFreq_Data: output to DAC
-    //oCountEnable: enable counter when ps2_data output
-    //oSongSelectSeq: select song, only 1 bit is 1
+/*Controller, which controls the data actually sent to the buzzer system, controls the selected song, and controls whether to enable the counter.*/
+module Controler (input iClk,   //clock
+                  input iReset_n,   //reset signal, active low
+                  input [7:0] iPs2_Data,    //keyboard data after decoded, if 99, stop playing note after a cycle
+                  input [7:0] iSong_Data,   //built-in song data, output to oFreq_Data if songs >0
+                  input [2:0] iSongSelect,  //song select signal
+                  output [7:0] oFreq_Data,  //frequency data to BuzzerDecoder
+                  output reg oCountEnable,  //enable counter when ps2_data output
+                  output reg signed [4:0] songs,    //song select signal to built-in song selector
+                  output [3:0] oSongSelectSeq   //song select sequence
+                  );
 
     always @(posedge iClk or negedge iReset_n)
     begin

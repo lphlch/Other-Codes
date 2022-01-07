@@ -16,10 +16,11 @@ module Lights (input iClk,
     end
 endmodule
 
-module Lights2 (input iClk,
-               input iReset_n,
-               input iEnable,
-               output reg oLights
+/*Display power supply, buzzer, and song selection status.*/
+module Lights2 (input iClk, //clock
+               input iReset_n,  //reset signal, active low
+               input iEnable,   //enable signal
+               output reg oLights   //connected to lights
                );
     
     always @(posedge iClk) begin

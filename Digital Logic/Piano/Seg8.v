@@ -1,9 +1,11 @@
-module Seg8(input iClk,
-            input iReset_n,
-            input [2:0] iControl_Speed,
-            input [2:0] iControl_Freq,
-            output reg [7:0] oSeg,
-            output reg [7:0] oAn);
+/*Displays current control warp speed and frequency information.*/
+module Seg8(input iClk, //clock
+            input iReset_n, //reset signal, active low
+            input [2:0] iControl_Speed, //controls the speed of the playing
+            input [2:0] iControl_Freq,  //controls the frequency of the playing
+            output reg [7:0] oSeg,  //information about the speed and frequency of the playing, output to LED
+            output reg [7:0] oAn    //control which position of the LED is active
+            );
     
     wire [2:0] s;
     reg [3:0] digit;
@@ -105,148 +107,6 @@ module Seg8(input iClk,
                 default: oSeg <= 8'b11111111;
             endcase
             
-            /*
-             case (iControl_Speed)
-             1: begin
-             case (position)
-             0: oSeg       <= 8'b00100101; //5
-             1: oSeg       <= 8'b01001001; //2
-             2: oSeg       <= 8'b10000000; //0.
-             6: oSeg       <= oSeg;
-             7: oSeg       <= oSeg;
-             default: oSeg <= 8'b11111111;
-             endcase
-             end
-             2:begin
-             case (position)
-             0: oSeg       <= 8'b10000001; //0
-             1: oSeg       <= 8'b00100101; //5
-             2: oSeg       <= 8'b10000000; //0.
-             6: oSeg       <= oSeg;
-             7: oSeg       <= oSeg;
-             default: oSeg <= 8'b11111111;
-             endcase
-             end
-             3:begin
-             case (position)
-             0: oSeg       <= 8'b10000001; //0
-             1: oSeg       <= 8'b10000001; //0
-             2: oSeg       <= 8'b11110010; //1.
-             6: oSeg       <= oSeg;
-             7: oSeg       <= oSeg;
-             default: oSeg <= 8'b11111111;
-             endcase
-             end
-             4:begin
-             case (position)
-             0: oSeg       <= 8'b00100101; //5
-             1: oSeg       <= 8'b01001001; //2
-             2: oSeg       <= 8'b11110010; //1.
-             6: oSeg       <= oSeg;
-             7: oSeg       <= oSeg;
-             default: oSeg <= 8'b11111111;
-             endcase
-             end
-             5:begin
-             case (position)
-             0: oSeg       <= 8'b10000001; //0
-             1: oSeg       <= 8'b00100101; //5
-             2: oSeg       <= 8'b11110010; //1.
-             6: oSeg       <= oSeg;
-             7: oSeg       <= oSeg;
-             default: oSeg <= 8'b11111111;
-             endcase
-             end
-             6:begin
-             case (position)
-             0: oSeg       <= 8'b10000001; //0
-             1: oSeg       <= 8'b10000001; //0
-             2: oSeg       <= 8'b01001001; //2.
-             6: oSeg       <= oSeg;
-             7: oSeg       <= oSeg;
-             default: oSeg <= 8'b11111111;
-             endcase
-             end
-             7:begin
-             case (position)
-             0: oSeg       <= 8'b10000001; //0
-             1: oSeg       <= 8'b10000001; //0
-             2: oSeg       <= 8'b01100000; //3.
-             6: oSeg       <= oSeg;
-             7: oSeg       <= oSeg;
-             default: oSeg <= 8'b11111111;
-             endcase
-             end
-             default: begin
-             case (position)
-             0: oSeg       <= 8'b10000001; //0
-             1: oSeg       <= 8'b10000001; //0
-             2: oSeg       <= 8'b11110010; //1.
-             6: oSeg       <= oSeg;
-             7: oSeg       <= oSeg;
-             default: oSeg <= 8'b11111111;
-             endcase
-             end
-             endcase
-             
-             case (iControl_Freq)
-             1: begin
-             case (position)
-             6: oSeg       <= 8'b10001111; //-
-             7: oSeg       <= 8'b01100001; //3
-             default: oSeg <= oSeg;
-             endcase
-             end
-             2: begin
-             case (position)
-             6: oSeg       <= 8'b10001111; //-
-             7: oSeg       <= 8'b01001001; //2
-             default: oSeg <= oSeg;
-             endcase
-             end
-             3: begin
-             case (position)
-             6: oSeg       <= 8'b10001111; //-
-             7: oSeg       <= 8'b11110011; //1
-             default: oSeg <= oSeg;
-             endcase
-             end
-             4: begin
-             case (position)
-             6: oSeg       <= 0; //
-             7: oSeg       <= 8'b10000001; //0
-             default: oSeg <= oSeg;
-             endcase
-             end
-             5: begin
-             case (position)
-             6: oSeg       <= 8'b00010011; //+
-             7: oSeg       <= 8'b11110011; //1
-             default: oSeg <= oSeg;
-             endcase
-             end
-             6: begin
-             case (position)
-             6: oSeg       <= 8'b00010011; //+
-             7: oSeg       <= 8'b01001001; //2
-             default: oSeg <= oSeg;
-             endcase
-             end
-             7: begin
-             case (position)
-             6: oSeg       <= 8'b00010011; //+
-             7: oSeg       <= 8'b01100001; //3
-             default: oSeg <= oSeg;
-             endcase
-             end
-             default: begin
-             case (position)
-             6: oSeg       <= 0; //
-             7: oSeg       <= 8'b10000001; //0
-             default: oSeg <= oSeg;
-             endcase
-             end
-             endcase */
         end
     end
     

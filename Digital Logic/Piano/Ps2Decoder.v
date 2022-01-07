@@ -1,10 +1,11 @@
+/*The keyboard keycode is decoded into the corresponding frequency data of the keyboard keys.*/
 module Ps2Decoder(
-	input iClk,
-	input iReset_n,
-	input iFlag,
-	input [7:0] iData,
+	input iClk,	//clock
+	input iReset_n,	//reset signal, active low
+	input iFlag,	//if a valid packet is received
+	input [7:0] iData,	//ps2 data received
 
-	output reg [7:0] oData
+	output reg [7:0] oData	//freq type
 	);
 
 	reg [15:0] temp;

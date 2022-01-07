@@ -1,9 +1,11 @@
-module Ps2Input(input iClk,
-                input iReset_n,
-                input iPs2_Clk,
-                input iPs2_Data,
-                output reg oFlag,
-                output [7:0] oData);
+/*Receive input signals from the keyboard and convert them into key codes.*/
+module Ps2Input(input iClk, //clock
+                input iReset_n, //reset signal, active low
+                input iPs2_Clk, //ps2 clock
+                input iPs2_Data,    //data from ps2
+                output reg oFlag,   //if a packet is ready
+                output [7:0] oData  //key code data
+                );
     
     wire  isNegative;
     

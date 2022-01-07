@@ -1,28 +1,25 @@
-module top (input iClk,
-            input iReset_n,
-            input iPs2_Clk,
-            input iPs2_Data,
-            input [1:0] iSongSelect,
-            input [1:0] iControl_Progress,
-            input [2:0] iControl_Speed,
-            input [2:0] iControl_Freq,
-            output oVGA_Hsync,
-            output oVGA_Vsync,
-            output [3:0] oVGA_Red,
-            output [3:0] oVGA_Green,
-            output [3:0] oVGA_Blue,
-            output oPWM,
-            output oLightsRing,
-            output oLightsPower,
-            output oLightsS0,
-            output oLightsS1,
-            output [7:0] oSeg_LED,
-            output [7:0] oSeg_An
-/*             output oLightsFreq,
-            output oLightsRing,
-            output oLightCounter,
-            output oLightPWM,
-            output oLightBuzzerFreq */);
+/*The TOP module is connected to each sub-module and directly connected to the input and output ports.*/
+module top (input iClk, //base clock
+            input iReset_n, //reset signal, active low
+            input iPs2_Clk, //ps2 keyboard clock
+            input iPs2_Data,    //ps2 keyboard data
+            input [1:0] iSongSelect,    //song select singal, input by switch
+            input [1:0] iControl_Progress,  //progress control signal, input by bottom
+            input [2:0] iControl_Speed, //speed control signal, input by switch
+            input [2:0] iControl_Freq,  //frequency control signal, input by switch
+            output oVGA_Hsync,  //vga hsync signal
+            output oVGA_Vsync,  //vga vsync signal
+            output [3:0] oVGA_Red,  //vga red signal
+            output [3:0] oVGA_Green,    //vga green signal
+            output [3:0] oVGA_Blue,   //vga blue signal
+            output oPWM,    //pwm signal, connected to the buzzer
+            output oLightsRing, //status of ringing, connected to the light
+            output oLightsPower,    //status of power, connected to the light
+            output oLightsS0,   //status of song, connected to the light
+            output oLightsS1,   //status of song, connected to the light
+            output [7:0] oSeg_LED,  //segment led signal, connected to the seven segment
+            output [7:0] oSeg_An    //led position signal, connected to the seven segment
+            );
 
     wire buzzer_Ring_Enable,buzzer_Counter_Enable;
     wire [12:0] buzzer_Freq,progress[3:0],playing_progress;
@@ -30,13 +27,13 @@ module top (input iClk,
     wire [7:0] ps2_Data,ps2_Decoded_Data,song_Data[3:0],freq_Data,playing_song_Data;
     wire [3:0] songSelector;
 
-	Frenp frep_dut(
+	Divider divider(//Frequency divider
 		.iClk(iClk),
 		.iReset_n(iReset_n),
 		.oClk(clk)
 		);
 
-    Ps2Input ps2Input(
+    Ps2Input ps2Input(//PS2 input connection
         .iClk(clk),
         .iReset_n(iReset_n),
         .iPs2_Clk(iPs2_Clk),
@@ -45,7 +42,7 @@ module top (input iClk,
         .oData(ps2_Data)
     );
 
-    Ps2Decoder ps2Decoder(
+    Ps2Decoder ps2Decoder(//keyboard decoder
     .iClk(clk),
     .iReset_n(iReset_n),
     .iFlag(ps2_Flag),
@@ -53,7 +50,7 @@ module top (input iClk,
     .oData(ps2_Decoded_Data)
     );
     
-    Controler controler(
+    Controler controler(//controler
         .iClk(clk),
         .iReset_n(iReset_n),
         .iPs2_Data(ps2_Decoded_Data),
@@ -64,7 +61,7 @@ module top (input iClk,
         .oSongSelectSeq(songSelector)
     ); 
 
-    OnlyMyRailGun song0(
+    OnlyMyRailGun song0(//one song
         .iClk(clk),
         .iReset_n(iReset_n),
         .iEnable(songSelector[0]),
@@ -75,7 +72,7 @@ module top (input iClk,
         .oFreq(song_Data[0])
     );
 
-    SistersNoise song1(
+    SistersNoise song1(//another one song XD
         .iClk(clk),
         .iReset_n(iReset_n),
         .iEnable(songSelector[1]),
@@ -150,14 +147,6 @@ module top (input iClk,
         .oAn(oSeg_An)
     );
 
-/* 
-    Lights lightsFreq(
-        .iClk(iClk),
-        .iReset_n(iReset_n),
-        .iEnable(freq_Data),
-        .oLights(oLightsFreq)
-    );
-*/
     Lights2 lightsPower(
         .iClk(clk),
         .iReset_n(iReset_n),
@@ -185,12 +174,5 @@ module top (input iClk,
         .iEnable(iSongSelect[1]),
         .oLights(oLightsS1)
     );
-
-/*     Lights3 lightBUzzerFreq(
-        .iClk(iClk),
-        .iReset_n(iReset_n),
-        .iEnable(buzzer_Freq),
-        .oLights(oLightBuzzerFreq)
-    );  */
 
 endmodule

@@ -1,10 +1,9 @@
-module BuzzerCounter (input iClk,
-                      input iReset_n,
-                      input iCountEnable,
-                      output reg oRing);
-    
-    // iCountEnable: if 1, oRing always 1(press down key), if 0, start counting after a cycle
-    // oRing: if 1, note is able to play. Default to play 0.2s. 0 to stop playing
+/*Provides buzzer duration count and buzzer control.*/
+module BuzzerCounter (input iClk,   //clock
+                      input iReset_n,   //reset signal, active low
+                      input iCountEnable,   //if 0, start counting after a cycle
+                      output reg oRing//if 1, note is able to play. Default to play 0.15s. 0 to stop playing
+                      );
     
     parameter i = 150000;   //0.15s
     reg[20:0] count;

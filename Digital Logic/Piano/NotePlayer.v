@@ -1,10 +1,10 @@
-module NotePlayer (input iClk,
-                   input iReset_n,
-                   input iRing,
-                   input[12:0] iFreq,
-                   output reg oNote);
-    //input iRing: control whether the note is ringing or not
-    //output oNote: output to interface
+/*Vibrate the buzzer according to the input frequency.*/
+module NotePlayer (input iClk,  //clock
+                   input iReset_n,  //reset signal, active low
+                   input iRing, //if able to ring
+                   input[12:0] iFreq,   //real frequency of the note
+                   output reg oNote //to audio output
+                   );
     
     reg [20:0] cnt;
     always @ (posedge iClk)

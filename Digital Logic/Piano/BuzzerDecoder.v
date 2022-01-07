@@ -1,13 +1,10 @@
-module BuzzerDecoder (input iClk,
-                      input iReset_n,
-                      input [7:0]iFreqType,
-                      //output oBuzzerEnable,
-                      output [12:0]oFreq);
-    
-    // iFreq: frequency type of the buzzer, 79 in total,1^-3 - 7^3, main 49keys , half 35keys
-    // oBuzzerEnable: enable the buzzer
-    // oFreq: frequency of the buzzer
-    
+/*Realize the conversion of frequency serial number to actual frequency.*/
+module BuzzerDecoder (input iClk,   //clock
+                      input iReset_n,   //reset signal, active low
+                      input [7:0]iFreqType, //frequency type of the buzzer, 79 in total,1^-3 - 7^3, main 49keys , half 35keys
+                      output [12:0]oFreq    //real frequency of the buzzer
+                      );
+
     reg [12:0]frequency;
     always @(posedge iClk) begin  // choose the frequency
         
