@@ -81,26 +81,26 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <wire from="(160,450)" to="(230,450)"/>
     <wire from="(260,440)" to="(330,440)"/>
     <wire from="(110,310)" to="(240,310)"/>
-    <comp lib="0" loc="(110,470)" name="Pin">
-      <a name="tristate" val="false"/>
-      <a name="label" val="S"/>
-    </comp>
-    <comp lib="0" loc="(110,310)" name="Clock"/>
-    <comp lib="0" loc="(250,320)" name="Power"/>
-    <comp lib="1" loc="(180,390)" name="NOT Gate"/>
     <comp lib="4" loc="(490,350)" name="D Flip-Flop">
       <a name="label" val="B"/>
     </comp>
     <comp lib="4" loc="(490,440)" name="D Flip-Flop">
       <a name="label" val="A"/>
     </comp>
+    <comp lib="0" loc="(110,370)" name="Pin">
+      <a name="tristate" val="false"/>
+      <a name="label" val="R"/>
+    </comp>
+    <comp lib="1" loc="(180,390)" name="NOT Gate"/>
+    <comp lib="0" loc="(110,310)" name="Clock"/>
     <comp lib="1" loc="(260,440)" name="OR Gate">
       <a name="size" val="30"/>
       <a name="inputs" val="2"/>
     </comp>
-    <comp lib="0" loc="(110,370)" name="Pin">
+    <comp lib="0" loc="(250,320)" name="Power"/>
+    <comp lib="0" loc="(110,470)" name="Pin">
       <a name="tristate" val="false"/>
-      <a name="label" val="R"/>
+      <a name="label" val="S"/>
     </comp>
   </circuit>
 </project>
