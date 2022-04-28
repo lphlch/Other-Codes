@@ -2,3 +2,4 @@
 .vscode
 LeetCode/a.py
 LeetCode/test.py
+*.stats
