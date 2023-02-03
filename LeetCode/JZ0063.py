@@ -8,15 +8,14 @@
 
 class Solution:
     def maxProfit(self, prices) -> int:
-        length=len(prices)
-        if length==0:
+        length = len(prices)
+        if length == 0:
             return 0
-        self.dp=[0]*length
-        minPrice=prices[0]
-        
-        for i in range(0,length):
-            minPrice=min(minPrice,prices[i])
-            self.dp[i]=max(self.dp[i-1],prices[i]-minPrice)
-            
+        self.dp = [0]*length
+        minPrice = prices[0]
+
+        for i in range(0, length):
+            minPrice = min(minPrice, prices[i])
+            self.dp[i] = max(self.dp[i-1], prices[i]-minPrice)
+
         return self.dp[-1]
-                

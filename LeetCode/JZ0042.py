@@ -5,7 +5,7 @@
 
 
 class Solution:
-    def fingMaxCrossingSubarray(self, array, low, mid, high):
+    def findMaxCrossingSubarray(self, array, low, mid, high):
         leftSum = -1000000
         sum = 0
         maxLeft = 0
