@@ -7,5 +7,19 @@
 
 '''
 
+
 class Solution:
     def translateNum(self, num: int) -> int:
+        dp = []
+        for i, c in enumerate(str(num)):
+            print(i, c)
+            print(dp)
+            if i == 0:
+                dp.append(1)
+            elif i == 1:
+                dp.append(2 if int(c)+int(str(num)[i-1])*10 < 26 else 1)
+            else:
+                dp.append(dp[-1]+dp[-2] if (int(c) +
+                          int(str(num)[i-1])*10 < 26) and str(num)[i-1] != '0' else dp[-1])
+
+        return dp[-1]
