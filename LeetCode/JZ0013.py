@@ -4,6 +4,38 @@
 请问该机器人能够到达多少个格子？
 '''
 
+
 class Solution:
     def movingCount(self, m: int, n: int, k: int) -> int:
-        
+        def check(i, j):
+            if i < 0 or i >= m or j < 0 or j >= n or is_visited[i][j] or (i // 10 + i % 10 + j // 10 + j % 10) > k:
+                return False
+            return True
+
+        def print_is_visited():
+            for i in range(m):
+                for j in range(n):
+                    if is_visited[i][j]:
+                        print('1', end=' ')
+                    else:
+                        print('0', end=' ')
+                print()
+
+        is_visited = [[False] * n for _ in range(m)]
+
+        s = [(0, 0)]
+        while s:
+            i, j = s.pop()
+            is_visited[i][j] = True
+            if check(i+1, j):
+                s.append((i+1, j))
+            if check(i-1, j):
+                s.append((i-1, j))
+            if check(i, j+1):
+                s.append((i, j+1))
+            if check(i, j-1):
+                s.append((i, j-1))
+
+        # print_is_visited()
+
+        return sum(sum(i) for i in is_visited)
