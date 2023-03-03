@@ -17,13 +17,12 @@ Return the maximum profit you can achieve from this transaction. If you cannot a
 
 class Solution:
     def maxProfit(self, prices) -> int:
-        length=len(prices)
-        self.dp=[0]*length
-        minPrice=prices[0]
-        
-        for i in range(0,length):
-            minPrice=min(minPrice,prices[i])
-            self.dp[i]=max(self.dp[i-1],prices[i]-minPrice)
-            
+        length = len(prices)
+        self.dp = [0]*length
+        minPrice = prices[0]
+
+        for i in range(0, length):
+            minPrice = min(minPrice, prices[i])
+            self.dp[i] = max(self.dp[i-1], prices[i]-minPrice)
+
         return self.dp[-1]
-                
