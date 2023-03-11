@@ -8,7 +8,6 @@ Given a string s, find the length of the longest substring without repeating cha
 '''
 
 
-
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
         if not s:
