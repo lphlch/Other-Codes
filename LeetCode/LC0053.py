@@ -50,3 +50,18 @@ class Solution:
             return 0
         else:
             return self.findMax(nums, 0, len(nums)-1)[2]
+
+
+class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+        n = len(nums)
+        dp = [-999999999]*n
+
+        for index, num in enumerate(nums):
+            if index == 0:
+                dp[index] = num
+                continue
+            dp[index] = max(dp[index-1]+num, num)
+
+        # print(dp)
+        return max(dp)
