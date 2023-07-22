@@ -18,3 +18,4 @@ class Solution:
     
 s=Solution()
 s.isPalindrome(121)
+
